@@ -13,7 +13,7 @@ Website for Sweet tours, six sea-view suites in Netanya (Hebrew + English), with
 
 ## Vercel setup
 
-1. Storage → create a **Blob** store (public access) and connect it to this project. This adds `BLOB_READ_WRITE_TOKEN`.
+1. Storage → create a **Blob** store (public access) and connect it to this project. Either `BLOB_READ_WRITE_TOKEN` or `BLOB_STORE_ID` (OIDC, the newer default) works.
 2. Settings → Environment Variables: set `ADMIN_EMAIL` and `ADMIN_PASSWORD`. Optional: `SESSION_SECRET` (any long random string).
 3. Redeploy so the new variables apply.
 

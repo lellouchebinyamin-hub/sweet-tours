@@ -80,7 +80,8 @@ export const isAdmin = req => {
 
 /* ---------- Storage ---------- */
 const blob = () => import('@vercel/blob');
-export const storageReady = () => Boolean(LOCAL_DIR || process.env.BLOB_READ_WRITE_TOKEN);
+// Either a read-write token, or (newer Vercel projects) the store id plus the OIDC token Vercel injects at runtime.
+export const storageReady = () => Boolean(LOCAL_DIR || process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
 export const putFile = async (pathname, body, contentType) => {
   if (LOCAL_DIR) {
@@ -129,7 +130,7 @@ export const delFiles = async files => {
 // so a save can take up to a minute or two to reach everyone.
 const LIVE = 'content/live.json';
 const liveUrl = () => {
-  const storeId = (process.env.BLOB_READ_WRITE_TOKEN || '').split('_')[3] || '';
+  const storeId = (process.env.BLOB_READ_WRITE_TOKEN || '').split('_')[3] || (process.env.BLOB_STORE_ID || '').trim().replace(/^store_/, '');
   return 'https://' + storeId + '.public.blob.vercel-storage.com/' + LIVE;
 };
 
