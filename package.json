@@ -1,0 +1,9 @@
+{
+  "name": "sweet-tours",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@vercel/blob": "^2.0.0"
+  }
+}

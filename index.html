@@ -424,6 +424,51 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   transition: opacity .7s var(--ease-out), transform 1.6s var(--ease-out);
 }
 .card__media img.is-on { opacity: 1; }
+.card__promo {
+  position: absolute;
+  inset-block-start: 16px;
+  inset-inline-start: 16px;
+  z-index: 2;
+  max-width: calc(100% - 32px);
+  padding: 8px 14px 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px -12px rgba(8, 20, 25, .6);
+  overflow: hidden;
+}
+.card__promo::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+.card__promo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .45) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: promo-shine 9s 1.5s var(--ease-out) infinite;
+}
+@keyframes promo-shine { 0%, 82% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@media (prefers-reduced-motion: reduce) { .card__promo::after { animation: none; } }
+.sd__promo {
+  margin: 0 0 6px;
+  justify-self: start;
+  align-self: flex-start;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold-soft);
+  font-size: 15px;
+}
+.sd__promo::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
 .card:hover .card__media img.is-on { transform: scale(1.035); }
 .card__nav {
   position: absolute;
@@ -1367,140 +1412,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       <h2 class="suites__title" id="suites-title" data-t="suitesTitle" data-reveal="lines">שש סוויטות, שש שעות של ים.</h2>
       <p class="suites__lede" data-t="suitesLede" data-reveal="fade">x</p>
     </div>
-    <ul class="cards" data-reveal="stagger">
-      <li class="card" data-suite="1" tabindex="0" role="button" aria-haspopup="dialog">
-        <figure class="card__media">
-          <img src="img/suite-1a.jpg" alt="" data-t-alt="s1altA" class="is-on" loading="lazy" width="800" height="1000">
-          <img src="img/suite-1b.jpg" alt="" data-t-alt="s1altB" loading="lazy" width="800" height="1000">
-          <div class="card__nav">
-            <span class="dots" aria-hidden="true"><i class="is-on"></i><i></i></span>
-            <span class="arrows">
-              <button class="arrow" type="button" data-step="-1" aria-label="prev" data-t-aria="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>
-              <button class="arrow" type="button" data-step="1" aria-label="next" data-t-aria="next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>
-            </span>
-          </div>
-        </figure>
-        <div class="card__body">
-          <div class="card__top"><span class="card__num">01</span><h3 class="card__name" data-t="s1">x</h3></div>
-          <p class="card__line" data-t="s1line">x</p>
-          <span></span>
-          <div class="card__foot">
-            <span class="card__price"><span data-t="from">x</span> <b>₪1,200</b></span>
-            <span class="card__more"><span data-t="more">x</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>
-          </div>
-        </div>
-      </li>
-      <li class="card" data-suite="2" tabindex="0" role="button" aria-haspopup="dialog">
-        <figure class="card__media">
-          <img src="img/suite-2a.jpg" alt="" data-t-alt="s2altA" class="is-on" loading="lazy" width="800" height="1000">
-          <img src="img/suite-2b.jpg" alt="" data-t-alt="s2altB" loading="lazy" width="800" height="1000">
-          <div class="card__nav">
-            <span class="dots" aria-hidden="true"><i class="is-on"></i><i></i></span>
-            <span class="arrows">
-              <button class="arrow" type="button" data-step="-1" aria-label="prev" data-t-aria="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>
-              <button class="arrow" type="button" data-step="1" aria-label="next" data-t-aria="next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>
-            </span>
-          </div>
-        </figure>
-        <div class="card__body">
-          <div class="card__top"><span class="card__num">02</span><h3 class="card__name" data-t="s2">x</h3></div>
-          <p class="card__line" data-t="s2line">x</p>
-          <span></span>
-          <div class="card__foot">
-            <span class="card__price"><span data-t="from">x</span> <b>₪1,200</b></span>
-            <span class="card__more"><span data-t="more">x</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>
-          </div>
-        </div>
-      </li>
-      <li class="card" data-suite="3" tabindex="0" role="button" aria-haspopup="dialog">
-        <figure class="card__media">
-          <img src="img/suite-3a.jpg" alt="" data-t-alt="s3altA" class="is-on" loading="lazy" width="800" height="1000">
-          <img src="img/suite-3b.jpg" alt="" data-t-alt="s3altB" loading="lazy" width="800" height="1000">
-          <div class="card__nav">
-            <span class="dots" aria-hidden="true"><i class="is-on"></i><i></i></span>
-            <span class="arrows">
-              <button class="arrow" type="button" data-step="-1" aria-label="prev" data-t-aria="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>
-              <button class="arrow" type="button" data-step="1" aria-label="next" data-t-aria="next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>
-            </span>
-          </div>
-        </figure>
-        <div class="card__body">
-          <div class="card__top"><span class="card__num">03</span><h3 class="card__name" data-t="s3">x</h3></div>
-          <p class="card__line" data-t="s3line">x</p>
-          <span></span>
-          <div class="card__foot">
-            <span class="card__price"><span data-t="from">x</span> <b>₪1,200</b></span>
-            <span class="card__more"><span data-t="more">x</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>
-          </div>
-        </div>
-      </li>
-      <li class="card" data-suite="4" tabindex="0" role="button" aria-haspopup="dialog">
-        <figure class="card__media">
-          <img src="img/suite-4a.jpg" alt="" data-t-alt="s4altA" class="is-on" loading="lazy" width="800" height="1000">
-          <img src="img/suite-4b.jpg" alt="" data-t-alt="s4altB" loading="lazy" width="800" height="1000">
-          <div class="card__nav">
-            <span class="dots" aria-hidden="true"><i class="is-on"></i><i></i></span>
-            <span class="arrows">
-              <button class="arrow" type="button" data-step="-1" aria-label="prev" data-t-aria="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>
-              <button class="arrow" type="button" data-step="1" aria-label="next" data-t-aria="next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>
-            </span>
-          </div>
-        </figure>
-        <div class="card__body">
-          <div class="card__top"><span class="card__num">04</span><h3 class="card__name" data-t="s4">x</h3></div>
-          <p class="card__line" data-t="s4line">x</p>
-          <span></span>
-          <div class="card__foot">
-            <span class="card__price"><span data-t="from">x</span> <b>₪1,200</b></span>
-            <span class="card__more"><span data-t="more">x</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>
-          </div>
-        </div>
-      </li>
-      <li class="card" data-suite="5" tabindex="0" role="button" aria-haspopup="dialog">
-        <figure class="card__media">
-          <img src="img/suite-5a.jpg" alt="" data-t-alt="s5altA" class="is-on" loading="lazy" width="800" height="1000">
-          <img src="img/suite-5b.jpg" alt="" data-t-alt="s5altB" loading="lazy" width="800" height="1000">
-          <div class="card__nav">
-            <span class="dots" aria-hidden="true"><i class="is-on"></i><i></i></span>
-            <span class="arrows">
-              <button class="arrow" type="button" data-step="-1" aria-label="prev" data-t-aria="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>
-              <button class="arrow" type="button" data-step="1" aria-label="next" data-t-aria="next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>
-            </span>
-          </div>
-        </figure>
-        <div class="card__body">
-          <div class="card__top"><span class="card__num">05</span><h3 class="card__name" data-t="s5">x</h3></div>
-          <p class="card__line" data-t="s5line">x</p>
-          <span></span>
-          <div class="card__foot">
-            <span class="card__price"><span data-t="from">x</span> <b>₪1,200</b></span>
-            <span class="card__more"><span data-t="more">x</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>
-          </div>
-        </div>
-      </li>
-      <li class="card" data-suite="6" tabindex="0" role="button" aria-haspopup="dialog">
-        <figure class="card__media">
-          <img src="img/suite-6a.jpg" alt="" data-t-alt="s6altA" class="is-on" loading="lazy" width="800" height="1000">
-          <img src="img/suite-6b.jpg" alt="" data-t-alt="s6altB" loading="lazy" width="800" height="1000">
-          <div class="card__nav">
-            <span class="dots" aria-hidden="true"><i class="is-on"></i><i></i></span>
-            <span class="arrows">
-              <button class="arrow" type="button" data-step="-1" aria-label="prev" data-t-aria="prev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>
-              <button class="arrow" type="button" data-step="1" aria-label="next" data-t-aria="next"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>
-            </span>
-          </div>
-        </figure>
-        <div class="card__body">
-          <div class="card__top"><span class="card__num">06</span><h3 class="card__name" data-t="s6">x</h3></div>
-          <p class="card__line" data-t="s6line">x</p>
-          <span></span>
-          <div class="card__foot">
-            <span class="card__price"><span data-t="from">x</span> <b>₪1,200</b></span>
-            <span class="card__more"><span data-t="more">x</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>
-          </div>
-        </div>
-      </li>
-    </ul>
+    <ul class="cards" id="cards" data-reveal="stagger"></ul>
   </section>
 
   <section class="story" id="experience" aria-labelledby="story-title">
@@ -1715,7 +1627,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
         <fieldset class="field"><legend data-t="fWhen">x</legend><div class="chips"><label class="chip"><input type="radio" name="when" value="w1" checked><span data-t="w1">x</span></label><label class="chip"><input type="radio" name="when" value="w2"><span data-t="w2">x</span></label><label class="chip"><input type="radio" name="when" value="w3"><span data-t="w3">x</span></label></div><input class="lead__date" type="date" name="date" hidden></fieldset>
         <div class="lead__row">
           <div class="field"><span data-t="fGuests">x</span><div class="stepper"><button type="button" data-d="-1" aria-label="-">−</button><output id="guests">2</output><button type="button" data-d="1" aria-label="+">+</button></div></div>
-          <label class="field"><span data-t="fSuite">x</span><select name="suite"><option value="" data-t="anySuite">x</option><option value="s1" data-t="s1">x</option><option value="s2" data-t="s2">x</option><option value="s3" data-t="s3">x</option><option value="s4" data-t="s4">x</option><option value="s5" data-t="s5">x</option><option value="s6" data-t="s6">x</option></select></label>
+          <label class="field"><span data-t="fSuite">x</span><select name="suite" id="lead-suite"><option value="" data-t="anySuite">x</option></select></label>
         </div>
         <button class="lead__send" type="submit"><span data-t="fSend">x</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.3 2 2.5 4.3 4.6 4.6l1.2-1.2 1.7.9"/></svg></button>
         <p class="lead__fine" data-t="fFine">x</p>
@@ -1757,7 +1669,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   <div class="sd" id="detail" role="dialog" aria-modal="true" aria-labelledby="detail-name" hidden>
     <div class="sd__bar" aria-hidden="true"><i></i></div>
     <div class="sd__top">
-      <span class="sd__count"><b id="sd-n">01</b> / 06</span>
+      <span class="sd__count"><b id="sd-n">01</b> / <span id="sd-total">06</span></span>
       <div class="sd__btns">
         <button class="sd__btn" id="detail-close" type="button" aria-label="close" data-t-aria="close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
       </div>
@@ -1782,8 +1694,9 @@ h1 em { font-style: normal; color: var(--gold-soft); }
         <figure class="sd__fig"><img id="detail-b" alt=""><span class="sd__figcap" id="sd-cap">x</span></figure>
       </section>
       <section class="sd__book wrap">
-        <p class="sd__price" style="margin:0"><small data-t="from">x</small><b>₪1,200</b><small data-t="night">x</small></p>
+        <p class="sd__price" style="margin:0"><small data-t="from">x</small><b id="sd-price">₪1,200</b><small data-t="night">x</small></p>
         <div class="sd__acts">
+          <p class="sd__promo" id="sd-promo" hidden></p>
           <a class="btn btn--acc sd__cta" id="detail-wa" href="#" target="_blank" rel="noopener"><span id="detail-ask">x</span><i class="sd__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.3 2 2.5 4.3 4.6 4.6l1.2-1.2 1.7.9"/></svg></i></a>
           <a class="btn btn--ghost sd__cta" href="tel:+972584088554"><span><span data-t="callNow">x</span> <span class="btn__num">058-408-8554</span></span><i class="sd__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg></i></a>
         </div>
@@ -1804,7 +1717,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     </div>
     <div class="sheet__nav">
       <ul class="sheet__links"><li><a href="#suites" style="--i:0"><span data-t="nav1">x</span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 6h20M15 1l5 5-5 5"/></svg></a></li><li><a href="#experience" style="--i:1"><span data-t="nav2">x</span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 6h20M15 1l5 5-5 5"/></svg></a></li><li><a href="#included" style="--i:2"><span data-t="fIncluded">x</span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 6h20M15 1l5 5-5 5"/></svg></a></li><li><a href="#who" style="--i:3"><span data-t="fWho">x</span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 6h20M15 1l5 5-5 5"/></svg></a></li><li><a href="#location" style="--i:4"><span data-t="nav3">x</span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 6h20M15 1l5 5-5 5"/></svg></a></li><li><a href="#book" style="--i:5"><span data-t="fBook">x</span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M0 6h20M15 1l5 5-5 5"/></svg></a></li></ul>
-      <div class="sheet__suites"><p data-t="nav1">x</p><div class="sheet__strip"><button type="button" data-open="1"><img src="img/suite-1a.jpg" alt="" loading="lazy" width="800" height="1000"><span data-t="s1">x</span></button><button type="button" data-open="2"><img src="img/suite-2a.jpg" alt="" loading="lazy" width="800" height="1000"><span data-t="s2">x</span></button><button type="button" data-open="3"><img src="img/suite-3a.jpg" alt="" loading="lazy" width="800" height="1000"><span data-t="s3">x</span></button><button type="button" data-open="4"><img src="img/suite-4a.jpg" alt="" loading="lazy" width="800" height="1000"><span data-t="s4">x</span></button><button type="button" data-open="5"><img src="img/suite-5a.jpg" alt="" loading="lazy" width="800" height="1000"><span data-t="s5">x</span></button><button type="button" data-open="6"><img src="img/suite-6a.jpg" alt="" loading="lazy" width="800" height="1000"><span data-t="s6">x</span></button></div></div>
+      <div class="sheet__suites"><p data-t="nav1">x</p><div class="sheet__strip" id="sheet-strip"></div></div>
     </div>
     <div class="sheet__foot">
       <div class="sheet__acts">
@@ -2002,6 +1915,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       const m = el.dataset.tAlt.match(/^s(\d)alt([AB])$/);
       el.setAttribute('alt', m ? c['alt' + m[2]].replace('{name}', c['s' + m[1]]) : c[el.dataset.tAlt]);
     });
+    if (window.stSuites) window.stSuites();
     if (window.stSelect) window.stSelect();
     document.getElementById('nav-waze').href = 'https://waze.com/ul?navigate=yes&q=' + encodeURIComponent(c.addrQ);
     document.getElementById('foot-map').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.addrQ);
@@ -2030,7 +1944,26 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   try { if (localStorage.getItem('st-lang') === 'en') saved = 'en'; } catch (e) {}
   setLang(saved);
 
-  /* ---------- Suites: cards with a two-photo gallery, detail view ---------- */
+  /* ---------- Suites: data (editable from /admin), cards with a photo gallery, detail view ---------- */
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
+  const pick = (he, en) => ({ he, en });
+  let suites = [1, 2, 3, 4, 5, 6].map(i => ({
+    id: 's' + i,
+    name: pick(copy.he['s' + i], copy.en['s' + i]),
+    line: pick(copy.he['s' + i + 'line'], copy.en['s' + i + 'line']),
+    mood: pick(copy.he['s' + i + 'mood'], copy.en['s' + i + 'mood']),
+    story: pick(copy.he['s' + i + 'story'], copy.en['s' + i + 'story']),
+    price: 1200,
+    images: ['img/suite-' + i + 'a.jpg', 'img/suite-' + i + 'b.jpg'],
+    promo: { on: false, he: '', en: '' }
+  }));
+  const tx = o => (o && (o[lang] || o.he || o.en)) || '';
+  const pad = n => String(n).padStart(2, '0');
+  const fmtPrice = p => '₪' + Math.round(+p || 0).toLocaleString('en-US');
+  const imgsOf = s => (s.images && s.images.length ? s.images : ['img/moment-1.jpg']);
+  const promoOf = s => (s.promo && s.promo.on ? tx(s.promo) : '');
+  window.stSuiteName = id => { const s = suites.find(x => x.id === id); return s ? tx(s.name) : ''; };
+
   const showSlide = (root, n) => {
     const imgs = [...root.querySelectorAll(':scope > img')];
     const dots = [...root.querySelectorAll('.dots i')];
@@ -2043,6 +1976,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       e.stopPropagation();
       showSlide(root, (+root.dataset.slide || 0) + (+b.dataset.step));
     }));
+    if (root.querySelectorAll(':scope > img').length < 2) return;
     let x0 = null;
     root.addEventListener('pointerdown', e => { x0 = e.clientX; });
     root.addEventListener('pointerup', e => {
@@ -2051,38 +1985,79 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       if (Math.abs(dx) > 40) { root.dataset.swiped = '1'; showSlide(root, (+root.dataset.slide || 0) + (dx < 0 ? 1 : -1)); }
     });
   };
-  document.querySelectorAll('.card__media').forEach(wireGallery);
+  const cardsEl = document.getElementById('cards');
+  const stripEl = document.getElementById('sheet-strip');
+  const selEl = document.getElementById('lead-suite');
+  const cardHtml = (s, k, c) => {
+    const name = tx(s.name), imgs = imgsOf(s), promo = promoOf(s);
+    return '<li class="card" data-suite="' + k + '" tabindex="0" role="button" aria-haspopup="dialog">' +
+      '<figure class="card__media">' +
+        imgs.map((src, j) => '<img src="' + esc(src) + '" alt="' + esc((j ? c.altB : c.altA).replace('{name}', name)) + '"' + (j ? '' : ' class="is-on"') + ' loading="lazy" width="800" height="1000">').join('') +
+        (promo ? '<span class="card__promo">' + esc(promo) + '</span>' : '') +
+        (imgs.length > 1 ? '<div class="card__nav"><span class="dots" aria-hidden="true">' + imgs.map((_, j) => '<i' + (j ? '' : ' class="is-on"') + '></i>').join('') + '</span>' +
+          '<span class="arrows">' +
+            '<button class="arrow" type="button" data-step="-1" aria-label="' + esc(c.prev) + '"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 3l5 5-5 5"/></svg></button>' +
+            '<button class="arrow" type="button" data-step="1" aria-label="' + esc(c.next) + '"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 3L5 8l5 5"/></svg></button>' +
+          '</span></div>' : '') +
+      '</figure>' +
+      '<div class="card__body">' +
+        '<div class="card__top"><span class="card__num">' + pad(k + 1) + '</span><h3 class="card__name">' + esc(name) + '</h3></div>' +
+        '<p class="card__line">' + esc(tx(s.line)) + '</p>' +
+        '<span></span>' +
+        '<div class="card__foot">' +
+          '<span class="card__price"><span>' + c.from + '</span> <b>' + fmtPrice(s.price) + '</b></span>' +
+          '<span class="card__more"><span>' + c.more + '</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>' +
+        '</div>' +
+      '</div></li>';
+  };
+  const renderSuites = () => {
+    const c = copy[lang];
+    cardsEl.innerHTML = suites.map((s, k) => cardHtml(s, k, c)).join('');
+    [...cardsEl.children].forEach((li, k) => { li.style.setProperty('--d', (0.15 + k * 0.09).toFixed(2) + 's'); wireCard(li); });
+    stripEl.innerHTML = suites.map((s, k) => '<button type="button" data-open="' + k + '"><img src="' + esc(imgsOf(s)[0]) + '" alt="" loading="lazy" width="800" height="1000"><span>' + esc(tx(s.name)) + '</span></button>').join('');
+    const cur = selEl.value;
+    selEl.innerHTML = '<option value="">' + c.anySuite + '</option>' + suites.map(s => '<option value="' + esc(s.id) + '">' + esc(tx(s.name)) + '</option>').join('');
+    selEl.value = suites.some(s => s.id === cur) ? cur : '';
+  };
+
   const detail = document.getElementById('detail');
   const sdScroll = document.getElementById('sd-scroll');
   const sdHero = detail.querySelector('.sd__heroimg');
   const sdStory = document.getElementById('sd-story-sec');
   const sdFig = detail.querySelector('.sd__fig img');
   const sdWipe = document.getElementById('sd-wipe');
+  const sdNext = document.getElementById('sd-next');
   const reduceMo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let lastCard = null, openSuite = 0;
+  let lastCard = null, openSuite = -1;
   const splitName = (el, text) => {
     el.setAttribute('aria-label', text);
-    el.innerHTML = text.split(' ').map(w => '<span class="ch" aria-hidden="true">' + [...w].map(ch => '<span>' + ch + '</span>').join('') + '</span>').join(' ');
+    el.innerHTML = text.split(' ').map(w => '<span class="ch" aria-hidden="true">' + [...w].map(ch => '<span>' + esc(ch) + '</span>').join('') + '</span>').join(' ');
     el.querySelectorAll('.ch > span').forEach((sp, i) => sp.style.setProperty('--i', i));
   };
   const fillDetail = () => {
-    if (!openSuite) return;
-    const c = copy[lang], i = openSuite, name = c['s' + i], nx = i % 6 + 1;
-    document.getElementById('detail-a').src = 'img/suite-' + i + 'a.jpg';
-    document.getElementById('detail-b').src = 'img/suite-' + i + 'b.jpg';
+    const s = suites[openSuite];
+    if (!s) return;
+    const c = copy[lang], n = suites.length, name = tx(s.name), imgs = imgsOf(s), nx = suites[(openSuite + 1) % n];
+    const promo = promoOf(s), promoEl = document.getElementById('sd-promo');
+    document.getElementById('detail-a').src = imgs[0];
+    document.getElementById('detail-b').src = imgs[1] || imgs[0];
     document.getElementById('detail-a').alt = c.altA.replace('{name}', name);
     document.getElementById('detail-b').alt = c.altB.replace('{name}', name);
-    document.getElementById('sd-n').textContent = '0' + i;
-    document.getElementById('sd-mood').textContent = c['s' + i + 'mood'];
-    document.getElementById('detail-num').textContent = c.suiteWord + ' 0' + i;
+    document.getElementById('sd-n').textContent = pad(openSuite + 1);
+    document.getElementById('sd-total').textContent = pad(n);
+    document.getElementById('sd-mood').textContent = tx(s.mood);
+    document.getElementById('detail-num').textContent = c.suiteWord + ' ' + pad(openSuite + 1);
     splitName(document.getElementById('detail-name'), name);
-    document.getElementById('detail-line').textContent = c['s' + i + 'line'];
-    document.getElementById('sd-story').textContent = c['s' + i + 'story'];
+    document.getElementById('detail-line').textContent = tx(s.line);
+    document.getElementById('sd-story').textContent = tx(s.story);
     document.getElementById('sd-cap').textContent = c.moodCap;
+    document.getElementById('sd-price').textContent = fmtPrice(s.price);
+    promoEl.textContent = promo; promoEl.hidden = !promo;
     document.getElementById('detail-ask').textContent = c.bAsk.replace('{name}', name);
     document.getElementById('detail-wa').href = 'https://wa.me/972584088554?text=' + encodeURIComponent(c.waSuite.replace('{name}', name));
-    document.getElementById('sd-next-img').src = 'img/suite-' + nx + 'a.jpg';
-    document.getElementById('sd-next-name').textContent = c['s' + nx];
+    sdNext.hidden = n < 2;
+    document.getElementById('sd-next-img').src = imgsOf(nx)[0];
+    document.getElementById('sd-next-name').textContent = tx(nx.name);
   };
   window.stSelect = fillDetail;
   const sdDraw = () => {
@@ -2120,33 +2095,48 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     document.getElementById('detail-close').focus({ preventScroll: true });
   };
   const goSuite = step => {
-    const n = (openSuite - 1 + step + 6) % 6 + 1;
-    const swap = () => { openSuite = n; fillDetail(); sdScroll.scrollTop = 0; replay(); sdDraw(); };
+    const n = suites.length;
+    if (n < 2) return;
+    const to = (openSuite + step + n) % n;
+    const swap = () => { openSuite = to; fillDetail(); sdScroll.scrollTop = 0; replay(); sdDraw(); };
     if (reduceMo) { swap(); return; }
     sdWipe.classList.remove('go'); void sdWipe.offsetWidth; sdWipe.classList.add('go');
     setTimeout(swap, 480);
   };
-  document.getElementById('sd-next').addEventListener('click', () => goSuite(1));
+  sdNext.addEventListener('click', () => goSuite(1));
   const closeDetail = () => {
-    detail.hidden = true; openSuite = 0;
+    detail.hidden = true; openSuite = -1;
     detail.classList.remove('is-open');
     document.body.style.overflow = '';
-    if (lastCard) lastCard.focus();
+    if (lastCard && lastCard.isConnected) lastCard.focus();
   };
-  document.querySelectorAll('.card').forEach(card => {
+  function wireCard(card) {
     const media = card.querySelector('.card__media');
+    wireGallery(media);
     card.addEventListener('click', () => {
       if (media.dataset.swiped) { delete media.dataset.swiped; return; }
       openDetail(card);
     });
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(card); } });
-  });
+    card.addEventListener('keydown', e => { if (e.target === card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDetail(card); } });
+  }
   document.getElementById('detail-close').addEventListener('click', closeDetail);
   document.addEventListener('keydown', e => {
     if (detail.hidden) return;
     if (e.key === 'Escape') closeDetail();
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') goSuite((e.key === 'ArrowLeft') === (page.dir === 'rtl') ? 1 : -1);
   });
+  window.stSuites = () => { renderSuites(); };
+  renderSuites();
+  if (/^https?:$/.test(location.protocol)) {
+    fetch('/api/content', { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => {
+        if (!d || !Array.isArray(d.suites) || !d.suites.length) return;
+        suites = d.suites;
+        renderSuites();
+      })
+      .catch(() => {});
+  }
 
   /* ---------- Section 4: pinned scroll story ---------- */
   const story = document.querySelector('.story');
@@ -2406,7 +2396,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     const when = lead.querySelector('[name="when"]:checked').value;
     let w = c['when' + when.toUpperCase()];
     if (when === 'w3') w = dateIn.value ? c.whenW3.replace('{d}', new Date(dateIn.value + 'T12:00').toLocaleDateString(lang === 'he' ? 'he-IL' : 'en-GB', { day: 'numeric', month: 'long' })) : c.whenW3x;
-    const parts = [c.msgHi + (name ? ', ' + c.msgName.replace('{n}', name) : '') + '.', c.msgLook.replace('{w}', w) + ', ' + c.msgGuests.replace('{g}', guests) + (lead.suite.value ? ', ' + c.msgSuite.replace('{s}', c[lead.suite.value]) : '') + '.'];
+    const parts = [c.msgHi + (name ? ', ' + c.msgName.replace('{n}', name) : '') + '.', c.msgLook.replace('{w}', w) + ', ' + c.msgGuests.replace('{g}', guests) + (lead.suite.value ? ', ' + c.msgSuite.replace('{s}', window.stSuiteName(lead.suite.value)) : '') + '.'];
     if (lang === 'en') parts[1] = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
     return parts.join(' ');
   };
@@ -2537,11 +2527,13 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     closeSheet();
     if (target) target.scrollIntoView();
   }));
-  sheet.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
+  document.getElementById('sheet-strip').addEventListener('click', e => {
+    const b = e.target.closest('[data-open]');
+    if (!b) return;
     const card = document.querySelector('.card[data-suite="' + b.dataset.open + '"]');
     closeSheet();
     if (card) { card.scrollIntoView({ block: 'center' }); setTimeout(() => card.click(), 60); }
-  }));
+  });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
 
 
