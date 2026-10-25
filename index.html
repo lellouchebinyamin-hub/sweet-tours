@@ -89,6 +89,7 @@ a { color: inherit; }
 }
 .brand {
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   align-items: flex-start;
   text-decoration: none;
@@ -100,6 +101,7 @@ a { color: inherit; }
   font-size: 26px;
   letter-spacing: .02em;
   direction: ltr;
+  white-space: nowrap;
 }
 .brand__tag {
   margin-top: 6px;
@@ -108,6 +110,7 @@ a { color: inherit; }
   text-transform: uppercase;
   color: var(--on-image-quiet);
   direction: ltr;
+  white-space: nowrap;
 }
 .nav__links {
   display: flex;
@@ -1203,11 +1206,13 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   .nav .nav__menu-btn { display: inline-grid; }
   .nav__end { gap: 4px; }
   .brand__name { font-size: 22px; }
-  .brand__tag { font-size: 10px; }
+  .brand__tag { font-size: 10px; letter-spacing: .26em; }
+  .hero h1 { text-shadow: 0 2px 24px rgba(8, 20, 25, .55); }
+  .hero .eyebrow { color: var(--on-image); }
   .hero { min-height: max(640px, 100svh); }
   .hero__shade {
     background:
-      linear-gradient(0deg, rgba(8, 20, 25, .88) 0%, rgba(8, 20, 25, .55) 45%, rgba(8, 20, 25, 0) 70%),
+      linear-gradient(0deg, rgba(8, 20, 25, .92) 0%, rgba(8, 20, 25, .78) 48%, rgba(8, 20, 25, .45) 64%, rgba(8, 20, 25, 0) 82%),
       linear-gradient(180deg, rgba(8, 20, 25, .5) 0%, rgba(8, 20, 25, 0) 16%);
   }
   .hero__body { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 0 56px; }
