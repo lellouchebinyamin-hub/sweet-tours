@@ -1961,7 +1961,8 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   const pad = n => String(n).padStart(2, '0');
   const fmtPrice = p => '₪' + Math.round(+p || 0).toLocaleString('en-US');
   const imgsOf = s => (s.images && s.images.length ? s.images : ['img/moment-1.jpg']);
-  const promoOf = s => (s.promo && s.promo.on ? tx(s.promo) : '');
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  const promoOf = s => (s.promo && s.promo.on && (!s.promo.until || s.promo.until >= today()) ? tx(s.promo) : '');
   window.stSuiteName = id => { const s = suites.find(x => x.id === id); return s ? tx(s.name) : ''; };
 
   const showSlide = (root, n) => {
@@ -2037,7 +2038,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   const fillDetail = () => {
     const s = suites[openSuite];
     if (!s) return;
-    const c = copy[lang], n = suites.length, name = tx(s.name), imgs = imgsOf(s), nx = suites[(openSuite + 1) % n];
+    const c = copy[lang], n = suites.length, name = tx(s.name), imgs = imgsOf(s), nx = suites[(openSuite + 1) % n] || s;
     const promo = promoOf(s), promoEl = document.getElementById('sd-promo');
     document.getElementById('detail-a').src = imgs[0];
     document.getElementById('detail-b').src = imgs[1] || imgs[0];
@@ -2131,8 +2132,8 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     fetch('/api/content', { cache: 'no-store' })
       .then(r => (r.ok ? r.json() : null))
       .then(d => {
-        if (!d || !Array.isArray(d.suites) || !d.suites.length) return;
-        suites = d.suites;
+        if (!d || !Array.isArray(d.suites)) return;
+        suites = d.suites.filter(s => !s.hidden);
         renderSuites();
       })
       .catch(() => {});

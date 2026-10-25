@@ -176,7 +176,8 @@ export const cleanContent = input => {
       story: pair(s.story, 900),
       price: Number.isFinite(price) && price >= 0 && price <= 100000 ? price : 1200,
       images: (Array.isArray(s.images) ? s.images : []).filter(okImage).slice(0, 12),
-      promo: { on: Boolean(s.promo && s.promo.on), ...pair(s.promo, 60) }
+      hidden: Boolean(s.hidden),
+      promo: { on: Boolean(s.promo && s.promo.on), ...pair(s.promo, 60), until: /^\d{4}-\d{2}-\d{2}$/.test(s.promo && s.promo.until) ? s.promo.until : '' }
     };
   });
   return { suites };

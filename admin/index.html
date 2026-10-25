@@ -16,24 +16,25 @@
   --wall: #FBF9F5;
   --ink: #14181C;
   --sea: #0F2A33;
-  --sea-2: #16384a;
   --gold: #C08A4E;
   --gold-soft: #E4C69B;
   --stone: #6E6A63;
-  --line: rgba(20, 24, 28, .12);
-  --line-2: rgba(20, 24, 28, .2);
+  --line: rgba(20, 24, 28, .1);
+  --line-2: rgba(20, 24, 28, .18);
   --on-sea: #F7F2EA;
   --on-sea-quiet: rgba(247, 242, 234, .62);
   --danger: #A8472F;
-  --ok: #2F6B57;
+  --ok: #3E7A63;
   --display: 'Frank Ruhl Libre', Georgia, serif;
   --text: 'Assistant', system-ui, sans-serif;
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --r: 4px;
-  --gutter: clamp(16px, 4vw, 48px);
+  --gutter: clamp(16px, 3.4vw, 48px);
+  --toph: 68px;
   color-scheme: light;
 }
 *, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 html, body { margin: 0; background: var(--sand); color: var(--ink); font-family: var(--text); font-size: 16px; -webkit-font-smoothing: antialiased; }
 body.lock { overflow: hidden; }
 button, input, textarea, select { font: inherit; color: inherit; }
@@ -43,14 +44,13 @@ img { display: block; max-width: 100%; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .ltr { direction: ltr; unicode-bidi: isolate; }
 .muted { color: var(--stone); }
-.eyebrow { margin: 0 0 10px; font-size: 13px; letter-spacing: .03em; color: var(--gold); font-weight: 600; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.eyebrow { margin: 0 0 10px; font-size: 13px; letter-spacing: .03em; color: var(--gold); font-weight: 700; }
 
 /* ---------- Buttons ---------- */
 .btn {
   position: relative;
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  min-height: 46px; padding: 0 22px;
+  min-height: 44px; padding: 0 20px;
   border: 1px solid transparent; border-radius: var(--r);
   font-weight: 600; font-size: 15px; text-decoration: none; white-space: nowrap;
   transition: background .35s var(--ease-out), color .35s var(--ease-out), border-color .35s var(--ease-out), transform .2s var(--ease-out), opacity .3s;
@@ -67,6 +67,7 @@ img { display: block; max-width: 100%; }
 .btn--quiet:hover { background: rgba(20, 24, 28, .06); }
 .btn--danger { border-color: rgba(168, 71, 47, .4); color: var(--danger); background: transparent; }
 .btn--danger:hover { background: var(--danger); color: var(--wall); border-color: var(--danger); }
+.btn--sm { min-height: 36px; padding: 0 14px; font-size: 14px; }
 .btn--block { width: 100%; }
 .btn[disabled] { opacity: .45; pointer-events: none; }
 .btn .spin { display: none; }
@@ -75,30 +76,35 @@ img { display: block; max-width: 100%; }
 .spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-inline-end-color: transparent; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .icon-btn {
-  width: 40px; height: 40px; display: inline-grid; place-items: center;
+  width: 40px; height: 40px; display: inline-grid; place-items: center; flex: none;
   border: 0; border-radius: var(--r); background: transparent;
   transition: background .3s var(--ease-out), color .3s;
 }
 .icon-btn:hover { background: rgba(20, 24, 28, .07); }
 .icon-btn svg { width: 20px; height: 20px; }
+.icon-btn[disabled] { opacity: .3; pointer-events: none; }
 
 /* ---------- Fields ---------- */
-.fld { display: grid; gap: 8px; }
-.fld > span, .fld__head { font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; gap: 12px; }
-.fld small { font-weight: 400; color: var(--stone); font-variant-numeric: tabular-nums; }
-.fld small.over { color: var(--danger); }
+.fld { display: grid; gap: 8px; min-width: 0; }
+.fld__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; font-weight: 600; }
+.fld__head small { font-weight: 400; color: var(--stone); font-variant-numeric: tabular-nums; }
+.fld__head small.over { color: var(--danger); }
+.fld__help { margin: -2px 0 0; font-size: 13px; color: var(--stone); line-height: 1.5; }
+.lang { display: inline-flex; align-items: center; gap: 6px; }
+.lang b { padding: 2px 7px; border-radius: 999px; background: var(--sand); font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--stone); }
+.miss { padding: 2px 8px; border-radius: 999px; background: rgba(192, 138, 78, .16); color: #8A5A24; font-size: 11px; font-weight: 700; }
 .in {
-  width: 100%; min-height: 48px; padding: 12px 14px;
+  width: 100%; min-height: 46px; padding: 11px 14px;
   border: 1px solid var(--line-2); border-radius: var(--r);
   background: #fff; outline: none;
   transition: border-color .3s var(--ease-out), box-shadow .3s var(--ease-out);
 }
+.in:hover { border-color: rgba(20, 24, 28, .3); }
 .in:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(192, 138, 78, .16); }
-textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
-.in--price { display: flex; align-items: center; padding: 0; overflow: hidden; }
-.in--price input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 12px 14px; background: transparent; font-size: 20px; font-family: var(--display); }
-.in--price b { padding: 0 14px; font-family: var(--display); font-weight: 400; font-size: 20px; color: var(--stone); }
-.in--price small { padding-inline-end: 14px; color: var(--stone); font-size: 14px; }
+.in::placeholder { color: rgba(110, 106, 99, .65); }
+textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
+.in--big { font-family: var(--display); font-size: 22px; min-height: 52px; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 20px; }
 
 /* ---------- Login ---------- */
 .login { position: fixed; inset: 0; z-index: 80; overflow-y: auto; min-height: 100svh; display: grid; grid-template-columns: 1.1fr 1fr; background: var(--wall); }
@@ -118,7 +124,7 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 @keyframes rise { to { opacity: 1; transform: none; } }
 .pw { position: relative; }
 .pw .in { padding-inline-end: 52px; }
-.pw .icon-btn { position: absolute; inset-block-start: 4px; inset-inline-end: 4px; color: var(--stone); }
+.pw .icon-btn { position: absolute; inset-block-start: 3px; inset-inline-end: 4px; color: var(--stone); }
 .login__err { margin: 0; min-height: 22px; color: var(--danger); font-size: 14px; }
 .login__note { margin: 0; padding: 14px 16px; border: 1px solid var(--gold); border-radius: var(--r); background: rgba(192, 138, 78, .08); font-size: 14px; line-height: 1.6; }
 .login__back { justify-self: center; color: var(--stone); font-size: 14px; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .3s, color .3s; }
@@ -126,7 +132,7 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 .shake { animation: shake .45s var(--ease-out); }
 @keyframes shake { 20% { transform: translateX(-8px); } 45% { transform: translateX(7px); } 70% { transform: translateX(-4px); } 100% { transform: none; } }
 
-/* ---------- App shell ---------- */
+/* ---------- Top bar ---------- */
 .top {
   position: sticky; top: 0; z-index: 30;
   display: flex; align-items: center; gap: 16px;
@@ -134,12 +140,12 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   padding-top: max(14px, env(safe-area-inset-top));
   background: var(--sea); color: var(--on-sea);
 }
-.top .brandmark { font-size: 22px; }
-.top__chip { padding: 4px 10px; border: 1px solid rgba(228, 198, 155, .45); border-radius: 999px; color: var(--gold-soft); font-size: 12px; font-weight: 600; letter-spacing: .03em; }
+.top .brandmark { font-size: 22px; color: inherit; text-decoration: none; }
+.top__chip { padding: 4px 10px; border: 1px solid rgba(228, 198, 155, .45); border-radius: 999px; color: var(--gold-soft); font-size: 12px; font-weight: 700; letter-spacing: .03em; }
 .top__status { display: flex; align-items: center; gap: 8px; margin-inline-start: auto; font-size: 14px; color: var(--on-sea-quiet); white-space: nowrap; }
 .top__status i { width: 8px; height: 8px; border-radius: 50%; background: #7FB89F; transition: background .3s; }
-.top__status.dirty i { background: var(--gold); box-shadow: 0 0 0 0 rgba(192, 138, 78, .6); animation: ping 2.4s infinite; }
-@keyframes ping { 70% { box-shadow: 0 0 0 8px rgba(192, 138, 78, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 138, 78, 0); } }
+.top__status.dirty i { background: var(--gold); animation: ping 2.4s infinite; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(192, 138, 78, .6); } 70% { box-shadow: 0 0 0 8px rgba(192, 138, 78, 0); } 100% { box-shadow: 0 0 0 0 rgba(192, 138, 78, 0); } }
 .top__acts { display: flex; align-items: center; gap: 8px; }
 .top .btn--quiet { color: var(--on-sea); min-height: 40px; }
 .top .btn--quiet:hover { background: rgba(247, 242, 234, .08); }
@@ -147,47 +153,46 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 .top .icon-btn:hover { background: rgba(247, 242, 234, .08); }
 .top .btn--gold { min-height: 40px; }
 .top .btn--gold[disabled] { opacity: 1; background: transparent; border-color: rgba(247, 242, 234, .18); color: var(--on-sea-quiet); }
+.banner { margin: 0; padding: 12px var(--gutter); background: rgba(192, 138, 78, .16); border-bottom: 1px solid rgba(192, 138, 78, .4); font-size: 14px; line-height: 1.5; }
 
-.banner { margin: 0; padding: 12px var(--gutter); background: rgba(192, 138, 78, .14); border-bottom: 1px solid rgba(192, 138, 78, .35); font-size: 14px; line-height: 1.5; }
-
-.main { max-width: 1440px; margin: 0 auto; padding: clamp(32px, 5vw, 64px) var(--gutter) 120px; }
-.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 44px); }
-.head h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(36px, 4.6vw, 60px); line-height: 1; }
-.head p.muted { margin: 14px 0 0; line-height: 1.6; max-width: 56ch; }
-
-/* ---------- Suite tiles ---------- */
-.grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+/* ---------- Suites list ---------- */
+.list { max-width: 1440px; margin: 0 auto; padding: clamp(32px, 5vw, 60px) var(--gutter) 140px; }
+.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.head h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(38px, 4.6vw, 60px); line-height: 1; }
+.head p.muted { margin: 12px 0 0; line-height: 1.6; max-width: 60ch; }
+.stats { list-style: none; margin: 32px 0 36px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.stats li { background: var(--wall); padding: 18px 20px; display: grid; gap: 4px; }
+.stats b { font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stats span { font-size: 13px; color: var(--stone); }
+.stats li.gold b { color: var(--gold); }
+.grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; }
 .tile {
   position: relative; display: flex; flex-direction: column; min-width: 0;
   background: var(--wall); border-radius: var(--r); overflow: hidden;
   box-shadow: 0 1px 0 var(--line);
   opacity: 0; transform: translateY(14px);
   animation: rise .8s var(--ease-out) forwards; animation-delay: var(--d, 0s);
-  transition: box-shadow .4s var(--ease-out), transform .4s var(--ease-out);
+  transition: box-shadow .4s var(--ease-out);
 }
 .tile:hover { box-shadow: 0 24px 50px -28px rgba(15, 42, 51, .45); }
 .tile.is-drag { opacity: .35; }
 .tile.is-over { outline: 2px dashed var(--gold); outline-offset: 4px; }
 .tile__media { position: relative; aspect-ratio: 4 / 3; background: var(--sea); cursor: pointer; overflow: hidden; }
-.tile__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+.tile__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out), filter .4s; }
 .tile:hover .tile__media img { transform: scale(1.04); }
+.tile.is-hidden .tile__media img { filter: grayscale(.7) brightness(.65); }
 .tile__empty { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 10px; color: var(--on-sea-quiet); font-size: 14px; }
 .tile__empty svg { width: 34px; height: 34px; }
-.tile__photos { position: absolute; inset-block-end: 12px; inset-inline-end: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: rgba(8, 20, 25, .6); color: var(--on-sea); font-size: 12px; backdrop-filter: blur(6px); }
-.tile__photos svg { width: 14px; height: 14px; }
 .tile__edit { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(8, 20, 25, .35); color: var(--on-sea); font-weight: 600; opacity: 0; transition: opacity .35s var(--ease-out); }
 .tile__edit span { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; background: rgba(8, 20, 25, .55); backdrop-filter: blur(6px); transform: translateY(6px); transition: transform .4s var(--ease-out); }
 .tile__edit svg { width: 16px; height: 16px; }
 .tile__media:hover .tile__edit { opacity: 1; }
 .tile__media:hover .tile__edit span { transform: none; }
-.promo {
-  position: absolute; z-index: 2; inset-block-start: 12px; inset-inline-start: 12px; max-width: calc(100% - 24px);
-  display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 10px;
-  background: var(--gold); color: var(--ink); border-radius: var(--r);
-  font-size: 13px; font-weight: 700; line-height: 1.3;
-  box-shadow: 0 10px 30px -12px rgba(8, 20, 25, .6);
-}
-.promo::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+.tile__tags { position: absolute; z-index: 2; inset-block-end: 12px; inset-inline: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: rgba(8, 20, 25, .62); color: var(--on-sea); backdrop-filter: blur(6px); }
+.tag svg { width: 13px; height: 13px; }
+.tag--gold { background: var(--gold); color: var(--ink); }
+.tag--warn { background: rgba(247, 242, 234, .92); color: #8A5A24; }
 .tile__body { display: grid; gap: 6px; padding: 18px 18px 14px; flex: 1; }
 .tile__top { display: flex; align-items: baseline; gap: 10px; }
 .tile__num { font-size: 13px; color: var(--stone); font-variant-numeric: tabular-nums; }
@@ -195,10 +200,10 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   margin: 0; flex: 0 1 auto; min-width: 0;
   font-family: var(--display); font-weight: 400; font-size: 26px; line-height: 1.15;
   border-radius: 2px; outline: none; cursor: text;
-  background-image: linear-gradient(var(--gold), var(--gold)); background-size: 0 1px; background-repeat: no-repeat; background-position: 100% 100%;
+  background-image: linear-gradient(var(--line-2), var(--line-2)); background-size: 0 1px; background-repeat: no-repeat; background-position: 100% 100%;
   transition: background-size .4s var(--ease-out);
 }
-.tile__name:hover { background-size: 100% 1px; background-image: linear-gradient(var(--line-2), var(--line-2)); }
+.tile__name:hover { background-size: 100% 1px; }
 .tile__name:focus { background-size: 100% 2px; background-image: linear-gradient(var(--gold), var(--gold)); }
 .tile__pen { width: 15px; height: 15px; color: var(--stone); flex: none; opacity: .7; }
 .tile__line { margin: 0; color: var(--stone); font-size: 14px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.9em; }
@@ -206,10 +211,13 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 .tile__price { font-variant-numeric: tabular-nums; }
 .tile__price small { color: var(--stone); }
 .tile__price b { font-weight: 700; }
-.tile__tools { display: flex; gap: 2px; }
+.tile__tools { display: flex; align-items: center; gap: 2px; }
 .tile__tools .icon-btn { width: 36px; height: 36px; color: var(--stone); }
 .tile__tools .icon-btn:hover { color: var(--ink); }
-.tile__tools .icon-btn[disabled] { opacity: .3; pointer-events: none; }
+.ring { --p: 0; width: 34px; height: 34px; flex: none; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--gold) calc(var(--p) * 1%), var(--line) 0); font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ring span { width: 27px; height: 27px; border-radius: 50%; background: var(--wall); display: grid; place-items: center; }
+.ring.full { background: var(--ok); }
+.ring.full span { color: var(--ok); }
 .tile--add {
   display: grid; place-items: center; align-content: center; gap: 14px; min-height: 340px;
   border: 1.5px dashed var(--line-2); background: transparent; box-shadow: none; color: var(--stone);
@@ -220,67 +228,79 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 .tile--add i { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; border: 1px solid currentColor; transition: transform .5s var(--ease-out), background .35s; }
 .tile--add:hover i { transform: rotate(90deg); background: var(--gold); border-color: var(--gold); color: var(--ink); }
 .tile--add svg { width: 22px; height: 22px; }
-.empty { padding: 64px 24px; text-align: center; color: var(--stone); }
 
-/* ---------- Editor drawer ---------- */
-.scrim { position: fixed; inset: 0; z-index: 40; background: rgba(8, 20, 25, .5); opacity: 0; transition: opacity .45s var(--ease-out); backdrop-filter: blur(2px); }
-.scrim.on { opacity: 1; }
-.drawer {
-  position: fixed; z-index: 41; inset-block: 0; inset-inline-end: 0;
-  width: min(620px, 100%);
-  display: flex; flex-direction: column;
-  background: var(--sand);
-  box-shadow: 0 0 80px rgba(8, 20, 25, .35);
-  transform: translateX(-104%);
-  transition: transform .6s var(--ease-out);
+/* ---------- Suite editor page ---------- */
+.ed { max-width: 1640px; margin: 0 auto; padding: 0 var(--gutter) 160px; animation: ed-in .6s var(--ease-out); }
+@keyframes ed-in { from { opacity: 0; transform: translateY(10px); } }
+.ed__bar {
+  position: sticky; top: var(--toph); z-index: 20;
+  display: flex; align-items: center; gap: 14px;
+  margin-inline: calc(-1 * var(--gutter)); padding: 14px var(--gutter);
+  background: rgba(244, 239, 231, .92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
 }
-[dir="rtl"] .drawer { transform: translateX(-104%); }
-.drawer.on { transform: none; }
-.drawer__head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; padding-top: max(16px, env(safe-area-inset-top)); background: var(--wall); border-bottom: 1px solid var(--line); }
-.drawer__head h2 { margin: 0; flex: 1; min-width: 0; font-family: var(--display); font-weight: 400; font-size: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.drawer__head small { display: block; font-family: var(--text); font-size: 12px; color: var(--stone); margin-bottom: 2px; }
-.drawer__body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 20px 20px 40px; display: grid; gap: 16px; align-content: start; }
-.drawer__foot { display: flex; gap: 10px; padding: 14px 20px; padding-bottom: max(14px, env(safe-area-inset-bottom)); background: var(--wall); border-top: 1px solid var(--line); }
-.drawer__foot .btn--gold { flex: 1; }
+.ed__back { display: inline-flex; align-items: center; gap: 6px; padding: 8px 10px 8px 12px; border: 0; border-radius: var(--r); background: transparent; color: var(--stone); font-size: 14px; font-weight: 600; transition: background .3s, color .3s; }
+.ed__back:hover { background: rgba(20, 24, 28, .06); color: var(--ink); }
+.ed__back svg { width: 16px; height: 16px; }
+.ed__thumb { width: 44px; height: 44px; border-radius: var(--r); object-fit: cover; background: var(--sea); flex: none; }
+.ed__title { min-width: 0; flex: 1; }
+.ed__title small { display: block; font-size: 12px; color: var(--stone); font-weight: 600; }
+.ed__title h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--wall); font-size: 13px; font-weight: 700; white-space: nowrap; transition: border-color .3s, background .3s; }
+.pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+.pill.off i { background: var(--stone); }
+.pill.off { color: var(--stone); }
+.pill:hover { border-color: var(--ink); }
+.ed__step { display: flex; gap: 4px; }
+.ed__layout { display: grid; grid-template-columns: 210px minmax(0, 1fr) 380px; gap: clamp(20px, 2.4vw, 40px); align-items: start; padding-top: 28px; }
+.toc { position: sticky; top: calc(var(--toph) + 96px); display: grid; gap: 22px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--r); color: var(--stone); font-size: 15px; font-weight: 600; text-decoration: none; transition: background .3s, color .3s; }
+.toc a svg { width: 17px; height: 17px; flex: none; }
+.toc a:hover { color: var(--ink); background: rgba(20, 24, 28, .05); }
+.toc a.on { color: var(--ink); background: var(--wall); box-shadow: inset -2px 0 0 var(--gold); }
+.toc a em { margin-inline-start: auto; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+.ready { padding: 16px; background: var(--wall); border-radius: var(--r); display: grid; gap: 12px; }
+.ready__head { display: flex; align-items: center; gap: 12px; }
+.ready__head b { display: block; font-size: 14px; }
+.ready__head small { color: var(--stone); font-size: 12px; }
+.ready ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ready li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--stone); line-height: 1.4; }
+.ready li i { flex: none; width: 16px; height: 16px; margin-top: 1px; border-radius: 50%; border: 1.5px solid var(--line-2); display: grid; place-items: center; }
+.ready li.ok { color: var(--ink); }
+.ready li.ok i { background: var(--ok); border-color: var(--ok); }
+.ready li.ok i::after { content: ""; width: 7px; height: 4px; border: solid #fff; border-width: 0 0 1.6px 1.6px; transform: rotate(-45deg) translate(1px, -1px); }
+.ready button { all: unset; cursor: pointer; }
+.ready button:hover { text-decoration: underline; }
 
-.preview { position: relative; display: grid; grid-template-columns: 132px 1fr; gap: 16px; align-items: center; padding: 12px; background: var(--wall); border-radius: var(--r); }
-.preview__media { position: relative; aspect-ratio: 4 / 5; border-radius: 2px; overflow: hidden; background: var(--sea); }
-.preview__media img { width: 100%; height: 100%; object-fit: cover; }
-.preview__media .promo { inset-block-start: 6px; inset-inline-start: 6px; max-width: calc(100% - 12px); padding: 4px 8px; font-size: 10px; gap: 5px; }
-.preview__media .promo::before { width: 4px; height: 4px; }
-.preview__label { margin: 0 0 6px; font-size: 12px; color: var(--stone); font-weight: 600; }
-.preview__name { margin: 0; font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1.15; }
-.preview__line { margin: 6px 0 10px; font-size: 13px; color: var(--stone); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.preview__price { font-size: 14px; }
-.preview__price b { font-weight: 700; }
+.main { display: grid; gap: 18px; min-width: 0; }
+.sec { scroll-margin-top: calc(var(--toph) + 96px); background: var(--wall); border-radius: var(--r); padding: clamp(18px, 2vw, 28px); display: grid; gap: 18px; }
+.sec__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.sec__head h2 { margin: 0; display: flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 700; }
+.sec__head h2 i { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--sand); color: var(--gold); }
+.sec__head h2 svg { width: 17px; height: 17px; }
+.sec__head p { margin: 6px 0 0; font-size: 14px; color: var(--stone); line-height: 1.5; }
+.sec__head > small { color: var(--stone); font-size: 13px; white-space: nowrap; padding-top: 8px; }
 
-.sec { background: var(--wall); border-radius: var(--r); padding: 20px; display: grid; gap: 16px; }
-.sec__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.sec__head h3 { margin: 0; display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; }
-.sec__head h3 i { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--sand); color: var(--gold); }
-.sec__head h3 svg { width: 16px; height: 16px; }
-.sec__head small { color: var(--stone); font-size: 13px; }
-.sec__hint { margin: -6px 0 0; font-size: 13px; color: var(--stone); line-height: 1.5; }
-
-.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--sand); }
-.seg button { border: 0; background: transparent; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--stone); transition: background .3s var(--ease-out), color .3s; }
-.seg button.on { background: var(--ink); color: var(--wall); }
-
-/* Photos */
-.photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.ph { position: relative; aspect-ratio: 4 / 5; border-radius: var(--r); overflow: hidden; background: var(--sea); touch-action: manipulation; transition: transform .3s var(--ease-out), opacity .3s; }
+/* Gallery: the cover photo is big, the rest follow. */
+.gal { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.ph { position: relative; aspect-ratio: 4 / 5; border-radius: var(--r); overflow: hidden; background: var(--sea); transition: transform .3s var(--ease-out), opacity .3s; }
+.ph:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
 .ph img { width: 100%; height: 100%; object-fit: cover; }
 .ph.is-drag { opacity: .35; }
 .ph.is-over { outline: 2px solid var(--gold); outline-offset: 2px; }
-.ph__main { position: absolute; inset-block-start: 8px; inset-inline-start: 8px; padding: 3px 8px; border-radius: 999px; background: var(--gold); color: var(--ink); font-size: 11px; font-weight: 700; }
-.ph__tools { position: absolute; inset-inline: 0; inset-block-end: 0; display: flex; justify-content: center; gap: 4px; padding: 28px 6px 8px; background: linear-gradient(0deg, rgba(8, 20, 25, .75), rgba(8, 20, 25, 0)); opacity: 0; transition: opacity .3s var(--ease-out); }
-.ph:hover .ph__tools, .ph:focus-within .ph__tools { opacity: 1; }
-.ph__tools button { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: var(--r); background: rgba(247, 242, 234, .92); color: var(--ink); transition: background .25s, color .25s; }
+.ph__main { position: absolute; inset-block-start: 10px; inset-inline-start: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--gold); color: var(--ink); font-size: 12px; font-weight: 700; }
+.ph__main svg { width: 12px; height: 12px; }
+.ph__n { position: absolute; inset-block-start: 8px; inset-inline-start: 8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center; background: rgba(8, 20, 25, .55); color: var(--on-sea); font-size: 11px; font-weight: 700; }
+.ph__tools { position: absolute; inset-inline: 0; inset-block-end: 0; display: flex; justify-content: center; gap: 4px; padding: 30px 6px 8px; background: linear-gradient(0deg, rgba(8, 20, 25, .78), rgba(8, 20, 25, 0)); opacity: 0; transform: translateY(6px); transition: opacity .3s var(--ease-out), transform .4s var(--ease-out); }
+.ph:hover .ph__tools, .ph:focus-within .ph__tools { opacity: 1; transform: none; }
+.ph__tools button { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: var(--r); background: rgba(247, 242, 234, .94); color: var(--ink); transition: background .25s, color .25s; }
 .ph__tools button:hover { background: var(--gold); }
 .ph__tools button.del:hover { background: var(--danger); color: var(--wall); }
 .ph__tools button[disabled] { opacity: .35; pointer-events: none; }
 .ph__tools svg { width: 15px; height: 15px; }
-.ph--up img { filter: blur(2px) brightness(.7); transform: scale(1.05); }
+.ph:first-child .ph__tools button { width: 36px; height: 36px; }
+.ph--up img { filter: blur(2px) brightness(.65); transform: scale(1.05); }
 .ph__prog { position: absolute; inset: 0; display: grid; place-items: center; color: var(--on-sea); font-size: 13px; font-weight: 700; }
 .ph__prog svg { position: absolute; width: 54px; height: 54px; transform: rotate(-90deg); }
 .ph__prog circle { fill: none; stroke-width: 3; }
@@ -293,27 +313,118 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   font-size: 13px; font-weight: 600; text-align: center; line-height: 1.4;
   transition: border-color .3s, color .3s, background .3s;
 }
-.drop:hover, .drop.is-over { border-color: var(--gold); color: var(--ink); background: rgba(192, 138, 78, .06); }
+.drop:hover { border-color: var(--gold); color: var(--ink); background: rgba(192, 138, 78, .06); }
 .drop svg { width: 26px; height: 26px; }
-.photos.is-over { outline: 2px dashed var(--gold); outline-offset: 6px; border-radius: var(--r); }
+.gal-empty { display: none; }
+.gal-empty.on {
+  display: grid; place-items: center; gap: 10px; padding: 40px 20px; text-align: center;
+  border: 1.5px dashed var(--line-2); border-radius: var(--r); color: var(--stone); font-size: 15px;
+}
+.gal-empty.on svg { width: 34px; height: 34px; color: var(--gold); }
+.gal.is-over, .gal-empty.is-over { outline: 2px dashed var(--gold); outline-offset: 6px; border-radius: var(--r); }
 
-/* Promo */
-.switch { position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.price { display: flex; align-items: stretch; max-width: 360px; border: 1px solid var(--line-2); border-radius: var(--r); background: #fff; overflow: hidden; transition: border-color .3s, box-shadow .3s; }
+.price:focus-within { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(192, 138, 78, .16); }
+.price b { display: grid; place-items: center; padding: 0 16px; background: var(--sand); font-family: var(--display); font-weight: 400; font-size: 24px; color: var(--stone); }
+.price input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 12px 16px; background: transparent; font-size: 28px; font-family: var(--display); }
+.price small { display: grid; place-items: center; padding-inline-end: 16px; color: var(--stone); font-size: 14px; }
+.steps { display: flex; gap: 8px; flex-wrap: wrap; }
+.steps button { border: 1px solid var(--line-2); background: transparent; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; transition: border-color .3s, background .3s; }
+.steps button:hover { border-color: var(--gold); background: rgba(192, 138, 78, .08); }
+
+.switch { position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 700; font-size: 14px; white-space: nowrap; }
 .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.switch i { position: relative; width: 48px; height: 28px; border-radius: 999px; background: var(--line-2); transition: background .35s var(--ease-out); }
+.switch i { position: relative; flex: none; width: 48px; height: 28px; border-radius: 999px; background: var(--line-2); transition: background .35s var(--ease-out); }
 .switch i::after { content: ""; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .2); transition: transform .4s var(--ease-out); }
 .switch input:checked + i { background: var(--gold); }
 .switch input:checked + i::after { transform: translateX(-20px); }
 .switch input:focus-visible + i { outline: 2px solid var(--gold); outline-offset: 2px; }
-.promo-fields { display: grid; gap: 14px; }
-.promo-fields.off { opacity: .45; }
+.promo-body { display: grid; gap: 16px; transition: opacity .3s; }
+.promo-body.off { opacity: .45; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chips button { border: 1px solid var(--line-2); background: transparent; padding: 7px 12px; border-radius: 999px; font-size: 13px; transition: border-color .3s, background .3s; }
 .chips button:hover { border-color: var(--gold); background: rgba(192, 138, 78, .08); }
+.until { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.until .in { width: auto; min-width: 190px; }
+.promo-state { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--sand); color: var(--stone); }
+.promo-state.live { background: rgba(62, 122, 99, .12); color: var(--ok); }
+.promo-state.ended { background: rgba(168, 71, 47, .1); color: var(--danger); }
 
-.danger { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border: 1px solid rgba(168, 71, 47, .25); border-radius: var(--r); }
-.danger p { margin: 0; font-size: 14px; color: var(--stone); line-height: 1.5; }
-.danger b { display: block; color: var(--ink); font-size: 15px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; padding-top: 0; }
+.row p { margin: 0; font-size: 14px; color: var(--stone); line-height: 1.5; }
+.row b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px; }
+.row--danger b { color: var(--danger); }
+
+/* ---------- Live preview ---------- */
+.pv { position: sticky; top: calc(var(--toph) + 96px); display: grid; gap: 14px; }
+.pv__bar { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.pv__bar b { font-size: 14px; }
+.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: rgba(20, 24, 28, .07); }
+.seg button { border: 0; background: transparent; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; color: var(--stone); transition: background .3s var(--ease-out), color .3s; }
+.seg button.on { background: var(--ink); color: var(--wall); }
+.pv__stage { display: grid; place-items: center; padding: 26px 22px; border-radius: var(--r); background: linear-gradient(180deg, #EDE6DA, var(--sand)); min-height: 520px; }
+.pv__note { margin: 0; font-size: 12px; color: var(--stone); text-align: center; line-height: 1.5; }
+/* Card, as on the site */
+.pc { width: 100%; max-width: 300px; background: var(--wall); box-shadow: 0 30px 60px -36px rgba(15, 42, 51, .5); }
+.pc__media { position: relative; aspect-ratio: 4 / 5; background: var(--sea); overflow: hidden; }
+.pc__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s var(--ease-out); }
+.pc__media img.on { opacity: 1; }
+.pc__dots { position: absolute; inset-block-end: 14px; inset-inline-start: 12px; display: flex; gap: 5px; }
+.pc__dots i { width: 14px; height: 2px; background: rgba(247, 242, 234, .45); }
+.pc__dots i.on { background: var(--on-sea); }
+.pc__arrows { position: absolute; inset-block-end: 8px; inset-inline-end: 8px; display: flex; gap: 4px; }
+.pc__arrows button { width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 2px; background: rgba(247, 242, 234, .9); }
+.pc__arrows svg { width: 13px; height: 13px; }
+.pc__promo {
+  position: absolute; z-index: 2; inset-block-start: 12px; inset-inline-start: 12px; max-width: calc(100% - 24px);
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 11px 6px 9px;
+  background: var(--gold); color: var(--ink); border-radius: var(--r);
+  font-size: 12px; font-weight: 700; line-height: 1.3;
+  box-shadow: 0 10px 30px -12px rgba(8, 20, 25, .6);
+  animation: pop .5s var(--ease-out);
+}
+.pc__promo::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--ink); }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } }
+.pc__body { display: grid; gap: 8px; padding: 18px 18px 16px; }
+.pc__top { display: flex; align-items: baseline; gap: 10px; }
+.pc__num { font-size: 12px; color: var(--stone); }
+.pc__name { margin: 0; font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1.1; }
+.pc__line { margin: 0; font-size: 13px; line-height: 1.6; color: var(--stone); min-height: 1.6em; }
+.pc__foot { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; margin-top: 4px; border-top: 1px solid var(--gold-soft); font-size: 13px; }
+.pc__foot b { font-weight: 700; }
+.pc__more { display: inline-flex; align-items: center; gap: 6px; }
+.pc__more svg { width: 16px; height: 9px; }
+[dir="ltr"] .pc__more svg { transform: scaleX(-1); }
+/* Suite page, in a phone */
+.phone { width: 280px; height: 560px; padding: 10px; border-radius: 38px; background: #0b1114; box-shadow: 0 40px 70px -40px rgba(8, 20, 25, .8), inset 0 0 0 2px #2a3236; }
+.phone__screen { position: relative; width: 100%; height: 100%; border-radius: 29px; overflow: hidden auto; background: var(--sea); color: var(--on-sea); scrollbar-width: none; }
+.phone__screen::-webkit-scrollbar { display: none; }
+.phone__notch { position: sticky; top: 0; z-index: 3; height: 0; }
+.phone__notch::before { content: ""; position: absolute; top: 8px; left: 50%; width: 76px; height: 20px; margin-left: -38px; border-radius: 999px; background: #0b1114; }
+.pp__hero { position: relative; height: 330px; background: #16384a; }
+.pp__hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pp__hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8, 20, 25, .9), rgba(8, 20, 25, 0) 65%); }
+.pp__ht { position: absolute; z-index: 1; inset-inline: 16px; inset-block-end: 16px; }
+.pp__mood { margin: 0 0 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: .04em; color: var(--gold-soft); font-weight: 700; }
+.pp__mood::before { content: ""; width: 14px; height: 1px; background: currentColor; }
+.pp__name { margin: 0; font-family: var(--display); font-weight: 400; font-size: 30px; line-height: 1.05; }
+.pp__line { margin: 6px 0 0; font-size: 11px; line-height: 1.5; color: var(--on-sea-quiet); }
+.pp__body { padding: 20px 16px 22px; display: grid; gap: 12px; }
+.pp__label { margin: 0; font-size: 10px; color: var(--gold-soft); font-weight: 700; letter-spacing: .04em; }
+.pp__story { margin: 0; font-family: var(--display); font-size: 15px; line-height: 1.5; color: var(--on-sea); }
+.pp__story:empty::before, .pc__line:empty::before { content: "…"; color: var(--stone); }
+.pp__img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 2px; }
+.pp__promo { justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--gold); border-radius: var(--r); color: var(--gold-soft); font-size: 11px; }
+.pp__promo::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.pp__price { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
+.pp__price small { font-size: 10px; color: var(--on-sea-quiet); }
+.pp__price b { font-family: var(--display); font-weight: 400; font-size: 34px; color: var(--gold); line-height: 1; }
+.pp__cta { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 12px; border-radius: var(--r); background: var(--gold); color: var(--ink); font-size: 11px; font-weight: 700; }
+.pp__cta--ghost { background: transparent; color: var(--on-sea); border: 1px solid rgba(247, 242, 234, .25); }
+.pp__cta i { width: 22px; height: 22px; border-radius: 50%; background: rgba(8, 20, 25, .12); flex: none; }
+.pp__cta--ghost i { background: rgba(247, 242, 234, .1); }
+.pv-fab, .pv__close { display: none; }
 
 /* ---------- Modal + toasts ---------- */
 .modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 20px; background: rgba(8, 20, 25, .55); opacity: 0; transition: opacity .3s var(--ease-out); }
@@ -333,7 +444,7 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 .toast.out { opacity: 0; transform: translateY(10px); transition: opacity .3s, transform .3s; }
 .toast svg { width: 20px; height: 20px; flex: none; color: var(--gold-soft); }
 .toast--err svg { color: #E79B85; }
-.toast button { border: 0; background: transparent; color: var(--gold-soft); font-weight: 700; padding: 4px 6px; }
+.toast button { border: 0; background: transparent; color: var(--gold-soft); font-weight: 700; padding: 4px 6px; white-space: nowrap; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(14px); } }
 .check path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw .6s .1s var(--ease-out) forwards; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
@@ -342,7 +453,43 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 .boot { min-height: 100svh; display: grid; place-items: center; background: var(--sea); color: var(--on-sea); }
 .boot .spin { width: 28px; height: 28px; color: var(--gold); }
 
-/* ---------- Mobile ---------- */
+/* ---------- Narrower screens ---------- */
+@media (max-width: 1280px) {
+  .ed__layout { grid-template-columns: minmax(0, 1fr) 340px; padding-top: 0; row-gap: 20px; }
+  .toc { top: calc(var(--toph) + 72px); z-index: 15; grid-column: 1 / -1; margin-inline: calc(-1 * var(--gutter)); padding: 10px var(--gutter); background: rgba(244, 239, 231, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .toc ol { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .toc ol::-webkit-scrollbar { display: none; }
+  .toc a { white-space: nowrap; padding: 7px 12px; background: var(--wall); border-radius: 999px; font-size: 14px; }
+  .toc a.on { box-shadow: none; background: var(--ink); color: var(--wall); }
+  .toc a em { display: none; }
+  .ready { display: none; }
+  .sec { scroll-margin-top: calc(var(--toph) + 140px); }
+  .pv { top: calc(var(--toph) + 140px); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 960px) {
+  .ed__layout { grid-template-columns: minmax(0, 1fr); }
+  .pv {
+    position: fixed; z-index: 45; inset: auto 0 0 0; top: auto;
+    max-height: 92svh; overflow-y: auto; padding: 22px 16px max(18px, env(safe-area-inset-bottom));
+    border-radius: 16px 16px 0 0; background: var(--sand);
+    box-shadow: 0 -30px 60px -20px rgba(8, 20, 25, .45);
+    transform: translateY(105%); transition: transform .55s var(--ease-out);
+  }
+  .pv.on { transform: none; }
+  .pv::before { content: ""; position: absolute; top: 8px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 999px; background: var(--line-2); }
+  .pv__close { display: inline-grid; }
+  .pv__stage { min-height: 0; padding: 18px 12px; }
+  .pv-fab {
+    display: inline-flex; position: fixed; z-index: 34; inset-inline-start: 16px; inset-block-end: max(16px, env(safe-area-inset-bottom));
+    align-items: center; gap: 8px; padding: 0 16px; min-height: 46px; border: 0; border-radius: 999px;
+    background: var(--ink); color: var(--wall); font-weight: 700; font-size: 14px;
+    box-shadow: 0 16px 30px -14px rgba(0, 0, 0, .6);
+    transition: transform .4s var(--ease-out);
+  }
+  .pv-fab svg { width: 18px; height: 18px; }
+  .shade { position: fixed; inset: 0; z-index: 44; background: rgba(8, 20, 25, .45); }
+}
 @media (max-width: 860px) {
   .login { grid-template-columns: minmax(0, 1fr); grid-template-rows: 34svh auto; }
   .login__brand { inset-block-start: 24px; inset-inline-start: 20px; }
@@ -351,30 +498,35 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   .top { gap: 10px; padding-block: 10px; }
   .top .brandmark { font-size: 19px; }
   .top__chip, .top__status span, .top .hide-m { display: none; }
-  .top__status { margin-inline-start: auto; }
-  .grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .tile { display: grid; grid-template-columns: 128px minmax(0, 1fr); }
+  .head .btn { display: none; }
+  .stats { margin: 22px 0 24px; }
+  .stats li { padding: 14px 16px; }
+  .stats b { font-size: 28px; }
+  .grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .tile { display: grid; grid-template-columns: 124px minmax(0, 1fr); }
   .tile__media { aspect-ratio: auto; min-height: 100%; }
   .tile__edit { display: none; }
+  .tile__tags { inset: auto 6px 6px 6px; gap: 4px; }
+  .tag { padding: 3px 7px; font-size: 10px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: block; }
+  .in, textarea.in { font-size: 16px; }
+  .tag svg { display: none; }
   .tile__body { padding: 14px 14px 10px; }
   .tile__name { font-size: 22px; }
-  .tile__line { font-size: 13px; -webkit-line-clamp: 2; }
-  .tile__photos { inset-block-end: 8px; inset-inline-end: 8px; padding: 3px 8px; }
-  .promo { inset-block-start: 8px; inset-inline-start: 8px; padding: 4px 8px; font-size: 11px; max-width: calc(100% - 16px); }
-  .promo::before { width: 4px; height: 4px; }
-  .tile--add { min-height: 96px; grid-auto-flow: column; display: flex; justify-content: center; gap: 12px; }
+  .tile__line { font-size: 13px; }
+  .tile--add { min-height: 92px; display: flex; justify-content: center; gap: 12px; }
   .tile--add i { width: 40px; height: 40px; }
-  .main { padding-bottom: 140px; }
-  .head .btn { display: none; }
-  .drawer { width: 100%; }
-  .drawer__body { padding: 14px 14px 32px; gap: 12px; }
-  .sec { padding: 16px; }
-  .preview { grid-template-columns: 96px 1fr; }
-  .preview__name { font-size: 21px; }
-  .photos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .ph__tools { opacity: 1; padding: 20px 4px 6px; gap: 3px; }
+  .ed__bar { gap: 10px; padding-block: 10px; }
+  .ed__back span, .ed__step, .ed__thumb { display: none; }
+  .ed__back { padding: 8px; }
+  .pill { padding: 5px 10px; font-size: 12px; }
+  .sec { padding: 16px; gap: 16px; }
+  .sec__head h2 { font-size: 17px; }
+  .sec__head h2 i { width: 30px; height: 30px; }
+  .gal { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ph__tools { opacity: 1; transform: none; padding: 20px 4px 6px; gap: 3px; }
   .ph__tools button { width: 28px; height: 28px; }
-  .danger { flex-direction: column; align-items: stretch; }
+  .ph:first-child .ph__tools button { width: 32px; height: 32px; }
+  .row { flex-direction: column; align-items: stretch; }
   .savebar {
     position: fixed; z-index: 35; inset-inline: 12px; inset-block-end: max(12px, env(safe-area-inset-bottom));
     display: flex; align-items: center; gap: 12px; padding: 10px 10px 10px 16px;
@@ -385,10 +537,12 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   .savebar.on { transform: none; }
   .savebar span { flex: 1; font-size: 14px; }
   .savebar .btn { min-height: 42px; }
+  body.has-save .pv-fab { transform: translateY(-70px); }
   .top .save-top { display: none; }
   .toasts { inset-block-end: max(84px, calc(env(safe-area-inset-bottom) + 72px)); }
 }
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
 }
 </style>
@@ -411,9 +565,9 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
         <h1>ברוכים השבים</h1>
       </div>
       <p class="muted">התחברו כדי לעדכן סוויטות, תמונות ומבצעים באתר.</p>
-      <p class="login__note" id="login-note" hidden>פרטי הכניסה עוד לא הוגדרו בשרת. צריך להוסיף ב-Vercel את המשתנים ADMIN_EMAIL ו-ADMIN_PASSWORD, ואז לפרסם מחדש.</p>
-      <label class="fld"><span>אימייל</span><input class="in ltr" type="email" name="email" autocomplete="username" inputmode="email" required></label>
-      <label class="fld"><span>סיסמה</span>
+      <p class="login__note" id="login-note" hidden>פרטי הכניסה עוד לא הוגדרו בשרת. צריך להוסיף ב-Vercel את המשתנים ADMIN_EMAIL ו-ADMIN_PASSWORD, ואז לעשות Redeploy.</p>
+      <label class="fld"><span class="fld__head">אימייל</span><input class="in ltr" type="email" name="email" autocomplete="username" inputmode="email" required></label>
+      <label class="fld"><span class="fld__head">סיסמה</span>
         <span class="pw"><input class="in ltr" type="password" name="password" autocomplete="current-password" required>
           <button class="icon-btn" type="button" id="pw-eye" aria-label="הצגת הסיסמה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </span>
@@ -427,8 +581,8 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
 
 <!-- App -->
 <div id="app" hidden>
-  <header class="top">
-    <span class="brandmark">Sweet tours</span>
+  <header class="top" id="top">
+    <a class="brandmark" href="#">Sweet tours</a>
     <span class="top__chip">ניהול</span>
     <span class="top__status" id="status" aria-live="polite"><i></i><span id="status-text">הכל שמור</span></span>
     <div class="top__acts">
@@ -437,99 +591,148 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
       <button class="icon-btn" type="button" id="logout" aria-label="יציאה" title="יציאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h10"/></svg></button>
     </div>
   </header>
-  <p class="banner" id="no-storage" hidden>האחסון של התמונות והתוכן עוד לא מחובר ב-Vercel, ולכן אי אפשר לשמור או להעלות תמונות. אפשר לחבר אותו בלשונית Storage בפרויקט.</p>
-  <main class="main">
-    <section class="head">
+  <p class="banner" id="no-storage" hidden><b>אי אפשר לשמור עדיין:</b> האחסון של התמונות והתוכן לא מחובר. ב-Vercel נכנסים ל-Storage, יוצרים Blob ומחברים לפרויקט, ואז עושים Redeploy.</p>
+
+  <!-- Suites list -->
+  <section class="list" id="list" hidden>
+    <div class="head">
       <div>
         <p class="eyebrow">ניהול תוכן</p>
         <h1>הסוויטות</h1>
-        <p class="muted"><span id="count"></span>. נגיעה בשם משנה אותו במקום, ונגיעה בתמונה פותחת את כל הפרטים. <span id="updated"></span></p>
+        <p class="muted">נגיעה בשם משנה אותו במקום. נגיעה בתמונה פותחת את עמוד העריכה המלא. <span id="updated"></span></p>
       </div>
       <button class="btn btn--ink" type="button" data-add><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg>סוויטה חדשה</button>
-    </section>
+    </div>
+    <ul class="stats" id="stats"></ul>
     <ul class="grid" id="grid"></ul>
-  </main>
-  <div class="savebar" id="savebar"><span>יש שינויים שלא פורסמו</span><button class="btn btn--gold" type="button" id="save-m"><span class="btn__label">שמירה ופרסום</span><span class="spin"></span></button></div>
-</div>
+  </section>
 
-<!-- Editor -->
-<div class="scrim" id="scrim" hidden></div>
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="ed-title" hidden>
-  <header class="drawer__head">
-    <h2 id="ed-title"><small id="ed-num">סוויטה</small><span id="ed-name">x</span></h2>
-    <button class="icon-btn" type="button" id="ed-close" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  </header>
-  <div class="drawer__body" id="ed-body">
-    <div class="preview" aria-hidden="true">
-      <div class="preview__media" id="pv-media"></div>
-      <div>
-        <p class="preview__label">כך זה ייראה באתר</p>
-        <p class="preview__name" id="pv-name"></p>
-        <p class="preview__line" id="pv-line"></p>
-        <p class="preview__price">החל מ- <b id="pv-price"></b> ללילה</p>
+  <!-- Suite editor -->
+  <section class="ed" id="editor" hidden>
+    <div class="ed__bar">
+      <button class="ed__back" type="button" id="ed-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg><span>כל הסוויטות</span></button>
+      <img class="ed__thumb" id="ed-thumb" alt="">
+      <div class="ed__title"><small id="ed-pos"></small><h1 id="ed-name"></h1></div>
+      <button class="pill" type="button" id="ed-vis" title="להציג או להסתיר באתר"><i></i><span></span></button>
+      <div class="ed__step">
+        <button class="icon-btn" type="button" id="ed-prev" aria-label="הסוויטה הקודמת" title="הסוויטה הקודמת"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg></button>
+        <button class="icon-btn" type="button" id="ed-next" aria-label="הסוויטה הבאה" title="הסוויטה הבאה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg></button>
       </div>
     </div>
 
-    <section class="sec">
-      <div class="sec__head">
-        <h3><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg></i>תמונות</h3>
-        <small id="ph-count"></small>
-      </div>
-      <p class="sec__hint">התמונה הראשונה היא התמונה הראשית. אפשר לגרור כדי לשנות סדר, או להשתמש בחיצים.</p>
-      <div class="photos" id="photos"></div>
-      <input type="file" id="file-add" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*" multiple hidden>
-      <input type="file" id="file-rep" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*" hidden>
-    </section>
+    <div class="ed__layout">
+      <nav class="toc" aria-label="סעיפים">
+        <ol id="toc">
+          <li><a href="#s-photos" data-sec="s-photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>תמונות<em hidden></em></a></li>
+          <li><a href="#s-basics" data-sec="s-basics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg>שם ותיאור קצר<em hidden></em></a></li>
+          <li><a href="#s-story" data-sec="s-story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 11h16M4 16h10"/></svg>הסיפור<em hidden></em></a></li>
+          <li><a href="#s-price" data-sec="s-price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2M15 16v-5.5a2 2 0 0 0-2-2"/></svg>מחיר</a></li>
+          <li><a href="#s-promo" data-sec="s-promo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>מבצע</a></li>
+          <li><a href="#s-settings" data-sec="s-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>הגדרות</a></li>
+        </ol>
+        <div class="ready" id="ready"></div>
+      </nav>
 
-    <section class="sec">
-      <div class="sec__head">
-        <h3><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h10M4 18h13"/></svg></i>טקסטים</h3>
-        <div class="seg" role="tablist" aria-label="שפה">
-          <button type="button" class="on" data-lang="he" role="tab" aria-selected="true">עברית</button>
-          <button type="button" data-lang="en" role="tab" aria-selected="false">English</button>
+      <div class="main">
+        <section class="sec" id="s-photos">
+          <div class="sec__head">
+            <div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg></i>תמונות</h2>
+            <p>התמונה הגדולה היא הראשית: היא מופיעה על הקופסה ובראש עמוד הסוויטה. גוררים כדי לשנות סדר.</p></div>
+            <small id="ph-count"></small>
+          </div>
+          <div class="gal" id="gal"></div>
+          <div class="gal-empty" id="gal-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg><span>עוד אין תמונות לסוויטה הזו</span><button class="btn btn--gold btn--sm" type="button" data-pick>העלאת תמונות</button><small class="muted">או גוררים קבצים לכאן</small></div>
+          <input type="file" id="file-add" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*" multiple hidden>
+          <input type="file" id="file-rep" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*" hidden>
+        </section>
+
+        <section class="sec" id="s-basics">
+          <div class="sec__head"><div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg></i>שם ותיאור קצר</h2>
+            <p>מה שמופיע על הקופסה של הסוויטה בעמוד הבית.</p></div></div>
+          <div class="pair">
+            <label class="fld"><span class="fld__head"><span class="lang">שם הסוויטה <b>עב</b></span><small data-count="name.he"></small></span><input class="in in--big" data-path="name.he" maxlength="60" placeholder="לדוגמה: שירת הים"></label>
+            <label class="fld"><span class="fld__head"><span class="lang">Suite name <b>EN</b><span class="miss" data-miss="name" hidden>חסר תרגום</span></span><small data-count="name.en"></small></span><input class="in in--big ltr" dir="ltr" data-path="name.en" maxlength="60" placeholder="e.g. Song of the Sea"></label>
+          </div>
+          <div class="pair">
+            <label class="fld"><span class="fld__head"><span class="lang">שורה קצרה <b>עב</b></span><small data-count="line.he"></small></span><input class="in" data-path="line.he" maxlength="200" placeholder="משפט אחד שמושך להיכנס"></label>
+            <label class="fld"><span class="fld__head"><span class="lang">Short line <b>EN</b><span class="miss" data-miss="line" hidden>חסר תרגום</span></span><small data-count="line.en"></small></span><input class="in ltr" dir="ltr" data-path="line.en" maxlength="200" placeholder="One sentence that invites people in"></label>
+          </div>
+          <div class="pair">
+            <label class="fld"><span class="fld__head"><span class="lang">אווירה <b>עב</b></span><small data-count="mood.he"></small></span><input class="in" data-path="mood.he" maxlength="40" placeholder="לדוגמה: שעת הזהב"></label>
+            <label class="fld"><span class="fld__head"><span class="lang">Mood <b>EN</b><span class="miss" data-miss="mood" hidden>חסר תרגום</span></span><small data-count="mood.en"></small></span><input class="in ltr" dir="ltr" data-path="mood.en" maxlength="40" placeholder="e.g. Golden hour"></label>
+          </div>
+          <p class="fld__help">האווירה היא מילה או שתיים שמופיעות מעל השם, בעמוד הסוויטה.</p>
+        </section>
+
+        <section class="sec" id="s-story">
+          <div class="sec__head"><div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 11h16M4 16h10"/></svg></i>הסיפור של הסוויטה</h2>
+            <p>הטקסט הגדול בעמוד הסוויטה. שתיים-שלוש שורות על התחושה, האור והחוויה.</p></div></div>
+          <div class="pair">
+            <label class="fld"><span class="fld__head"><span class="lang">עברית <b>עב</b></span><small data-count="story.he"></small></span><textarea class="in" data-path="story.he" maxlength="900"></textarea></label>
+            <label class="fld"><span class="fld__head"><span class="lang">English <b>EN</b><span class="miss" data-miss="story" hidden>חסר תרגום</span></span><small data-count="story.en"></small></span><textarea class="in ltr" dir="ltr" data-path="story.en" maxlength="900"></textarea></label>
+          </div>
+        </section>
+
+        <section class="sec" id="s-price">
+          <div class="sec__head"><div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2M15 16v-5.5a2 2 0 0 0-2-2"/></svg></i>מחיר ללילה</h2>
+            <p>מוצג באתר כ"החל מ-". זה מחיר פתיחה; את המחיר הסופי סוגרים בטלפון.</p></div></div>
+          <label class="price"><b>₪</b><input type="number" inputmode="numeric" min="0" max="100000" step="10" id="ed-price" class="ltr" aria-label="מחיר ללילה"><small>ללילה</small></label>
+          <div class="steps" id="price-steps"><button type="button" data-d="-100">‎−100</button><button type="button" data-d="-50">‎−50</button><button type="button" data-d="50">‎+50</button><button type="button" data-d="100">‎+100</button></div>
+        </section>
+
+        <section class="sec" id="s-promo">
+          <div class="sec__head">
+            <div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg></i>מבצע</h2>
+            <p>תווית זהב על התמונה של הסוויטה, וגם ליד המחיר בעמוד הסוויטה.</p></div>
+            <label class="switch"><span id="promo-label">כבוי</span><input type="checkbox" id="promo-on"><i></i></label>
+          </div>
+          <div class="promo-body" id="promo-body">
+            <div class="chips" id="promo-chips">
+              <button type="button" data-he="10% הנחה לסופ״ש הקרוב" data-en="10% off this weekend">10% הנחה</button>
+              <button type="button" data-he="לילה שלישי במתנה" data-en="Third night free">לילה שלישי במתנה</button>
+              <button type="button" data-he="בקבוק יין מתנה לזוגות" data-en="A bottle of wine for couples">יין מתנה לזוגות</button>
+              <button type="button" data-he="מחיר מיוחד לאמצע השבוע" data-en="Special midweek price">מחיר לאמצע השבוע</button>
+              <button type="button" data-he="הזמנה של הרגע האחרון" data-en="Last-minute deal">הרגע האחרון</button>
+            </div>
+            <div class="pair">
+              <label class="fld"><span class="fld__head"><span class="lang">טקסט המבצע <b>עב</b></span><small data-count="promo.he"></small></span><input class="in" data-path="promo.he" maxlength="60" placeholder="לדוגמה: לילה שלישי במתנה"></label>
+              <label class="fld"><span class="fld__head"><span class="lang">Promotion <b>EN</b><span class="miss" data-miss="promo" hidden>חסר תרגום</span></span><small data-count="promo.en"></small></span><input class="in ltr" dir="ltr" data-path="promo.en" maxlength="60" placeholder="e.g. Third night free"></label>
+            </div>
+            <div class="fld">
+              <span class="fld__head">בתוקף עד <span class="promo-state" id="promo-state"></span></span>
+              <div class="until"><input class="in ltr" type="date" id="promo-until" aria-label="תאריך סיום המבצע"><button class="btn btn--quiet btn--sm" type="button" id="promo-clear">בלי תאריך סיום</button></div>
+              <p class="fld__help">אחרי התאריך הזה המבצע יורד מהאתר לבד.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="sec" id="s-settings">
+          <div class="sec__head"><div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></i>הגדרות</h2></div></div>
+          <div>
+            <div class="row"><p><b>מוצגת באתר</b>כשהמתג כבוי, הסוויטה נשמרת כאן אבל לא מופיעה לגולשים. טוב לשיפוץ או לסוויטה שעוד לא מוכנה.</p><label class="switch"><input type="checkbox" id="vis-on" aria-label="מוצגת באתר"><i></i></label></div>
+            <div class="row"><p><b>שכפול</b>יוצר עותק של הסוויטה עם כל הטקסטים והתמונות, כדי להתחיל מסוויטה דומה.</p><button class="btn btn--ghost btn--sm" type="button" id="ed-dup">שכפול הסוויטה</button></div>
+            <div class="row row--danger"><p><b>מחיקה</b>הסוויטה תוסר מהאתר אחרי השמירה. אפשר לבטל עד שלוחצים על שמירה.</p><button class="btn btn--danger btn--sm" type="button" id="ed-delete">מחיקת הסוויטה</button></div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="pv" id="pv" aria-label="תצוגה מקדימה">
+        <div class="pv__bar">
+          <b>תצוגה מקדימה</b>
+          <div class="seg" id="pv-mode"><button type="button" class="on" data-mode="card">קופסה</button><button type="button" data-mode="page">עמוד הסוויטה</button></div>
+          <div class="seg" id="pv-lang"><button type="button" class="on" data-lang="he">עב</button><button type="button" data-lang="en">EN</button></div>
+          <button class="icon-btn pv__close" type="button" id="pv-close" aria-label="סגירה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
         </div>
-      </div>
-      <label class="fld"><span class="fld__head">שם הסוויטה<small data-count="name">0/60</small></span><input class="in" data-f="name" maxlength="60"></label>
-      <label class="fld"><span class="fld__head">שורה קצרה בקופסה<small data-count="line">0/200</small></span><input class="in" data-f="line" maxlength="200"></label>
-      <label class="fld"><span class="fld__head">אווירה (מעל השם בעמוד הסוויטה)<small data-count="mood">0/40</small></span><input class="in" data-f="mood" maxlength="40"></label>
-      <label class="fld"><span class="fld__head">הסיפור של הסוויטה<small data-count="story">0/900</small></span><textarea class="in" data-f="story" maxlength="900"></textarea></label>
-    </section>
+        <div class="pv__stage" id="pv-stage"></div>
+        <p class="pv__note">התצוגה מתעדכנת תוך כדי הקלדה. באתר עצמו השינוי מופיע אחרי שמירה ופרסום.</p>
+      </aside>
+    </div>
+    <button class="pv-fab" type="button" id="pv-open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>תצוגה מקדימה</button>
+    <div class="shade" id="pv-shade" hidden></div>
+  </section>
 
-    <section class="sec">
-      <div class="sec__head"><h3><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2h0M15 16v-5.5a2 2 0 0 0-2-2h0"/></svg></i>מחיר</h3></div>
-      <label class="fld"><span class="sr">מחיר ללילה</span>
-        <span class="in in--price"><b>₪</b><input type="number" inputmode="numeric" min="0" max="100000" step="10" id="ed-price" class="ltr"><small>ללילה</small></span>
-      </label>
-    </section>
-
-    <section class="sec">
-      <div class="sec__head">
-        <h3><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg></i>מבצע</h3>
-        <label class="switch"><span id="promo-state">כבוי</span><input type="checkbox" id="promo-on"><i></i></label>
-      </div>
-      <p class="sec__hint">המבצע מופיע כתווית זהב על התמונה של הסוויטה באתר, וגם בעמוד הסוויטה ליד המחיר.</p>
-      <div class="promo-fields" id="promo-fields">
-        <div class="chips" id="promo-chips">
-          <button type="button" data-he="10% הנחה לסופ״ש הקרוב" data-en="10% off this weekend">10% הנחה</button>
-          <button type="button" data-he="לילה שלישי במתנה" data-en="Third night free">לילה שלישי במתנה</button>
-          <button type="button" data-he="בקבוק יין מתנה לזוגות" data-en="A bottle of wine for couples">יין מתנה לזוגות</button>
-          <button type="button" data-he="מחיר מיוחד לאמצע השבוע" data-en="Special midweek price">מחיר לאמצע השבוע</button>
-        </div>
-        <label class="fld"><span class="fld__head">טקסט המבצע בעברית<small data-count="promo-he">0/60</small></span><input class="in" id="promo-he" maxlength="60" placeholder="לדוגמה: לילה שלישי במתנה"></label>
-        <label class="fld"><span class="fld__head">Promotion in English<small data-count="promo-en">0/60</small></span><input class="in ltr" id="promo-en" maxlength="60" dir="ltr" placeholder="e.g. Third night free"></label>
-      </div>
-    </section>
-
-    <section class="danger">
-      <p><b>מחיקת הסוויטה</b>הסוויטה תוסר מהאתר אחרי השמירה.</p>
-      <button class="btn btn--danger" type="button" id="ed-delete">מחיקה</button>
-    </section>
-  </div>
-  <footer class="drawer__foot">
-    <button class="btn btn--gold" type="button" id="ed-save"><span class="btn__label">שמירה ופרסום</span><span class="spin"></span></button>
-    <button class="btn btn--ghost" type="button" id="ed-done">סגירה</button>
-  </footer>
-</aside>
+  <div class="savebar" id="savebar"><span>יש שינויים שלא פורסמו</span><button class="btn btn--gold" type="button" id="save-m"><span class="btn__label">שמירה ופרסום</span><span class="spin"></span></button></div>
+</div>
 
 <div class="modal" id="modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-t" hidden>
   <div class="modal__box">
@@ -547,16 +750,25 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   const pad = n => String(n).padStart(2, '0');
   const fmtPrice = p => '₪' + Math.round(+p || 0).toLocaleString('en-US');
   const img = u => (/^(https?:|\/)/.test(u) ? u : '/' + u);
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  const fmtDate = iso => new Date(iso + 'T12:00').toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric', year: 'numeric' });
   const ICON = {
     left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7"/></svg>',
     right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg>',
     swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>',
     trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg>',
     photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>',
     pen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+    eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l18 18M10.6 6.1A10 10 0 0 1 12 6c6.4 0 10 6 10 6a17 17 0 0 1-3.3 3.9M6.2 7.3A17 17 0 0 0 2 12s3.6 6 10 6a9.6 9.6 0 0 0 4.2-.9"/></svg>',
+    tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12V4h8l10 10-8 8z"/></svg>',
     check: '<svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>'
+  };
+  const PV = {
+    he: { from: 'החל מ-', night: 'ללילה', more: 'לפרטים', suite: 'סוויטה', ask: 'לבירור זמינות בסוויטת {name}', call: 'התקשרו עכשיו', blank: 'סוויטה חדשה' },
+    en: { from: 'From', night: 'per night', more: 'Details', suite: 'Suite', ask: 'Check availability for {name}', call: 'Call now', blank: 'New suite' }
   };
 
   /* ---------- State ---------- */
@@ -564,16 +776,37 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
   let saved = '[]';
   let storage = true;
   let editing = null;
-  let edLang = 'he';
-  const uploads = {}; // suite id -> [{ key, preview, p, err }]
+  let leaving = false;
+  let pvMode = 'card', pvLang = 'he', pvSlide = 0;
+  const uploads = {}; // suite id -> [{ preview, p, err }]
   const MAX_PHOTOS = 12;
+  const DRAFT = 'st-admin-draft';
   const snapshot = () => JSON.stringify(suites);
   const dirty = () => snapshot() !== saved;
   const byId = id => suites.find(s => s.id === id);
+  const norm = s => {
+    s.hidden = Boolean(s.hidden);
+    s.promo = Object.assign({ on: false, he: '', en: '', until: '' }, s.promo || {});
+    ['name', 'line', 'mood', 'story'].forEach(k => { s[k] = Object.assign({ he: '', en: '' }, s[k] || {}); });
+    s.images = s.images || [];
+    if (!(s.price >= 0)) s.price = 1200;
+    return s;
+  };
+  const promoLive = s => s.promo.on && Boolean(s.promo.he || s.promo.en) && (!s.promo.until || s.promo.until >= today());
+  const checks = s => [
+    { ok: s.images.length >= 2, text: 'לפחות 2 תמונות', sec: 's-photos' },
+    { ok: Boolean(s.name.he.trim() && s.name.en.trim()), text: 'שם בעברית ובאנגלית', sec: 's-basics' },
+    { ok: Boolean(s.line.he.trim() && s.line.en.trim()), text: 'שורה קצרה בשתי השפות', sec: 's-basics' },
+    { ok: Boolean(s.mood.he.trim() && s.mood.en.trim()), text: 'אווירה בשתי השפות', sec: 's-basics' },
+    { ok: Boolean(s.story.he.trim() && s.story.en.trim()), text: 'סיפור בשתי השפות', sec: 's-story' },
+    { ok: s.price > 0, text: 'מחיר ללילה', sec: 's-price' }
+  ];
+  const readiness = s => { const c = checks(s); return Math.round(c.filter(x => x.ok).length / c.length * 100); };
+  const ring = r => '<span class="ring' + (r === 100 ? ' full' : '') + '" style="--p:' + r + '" title="מוכנות: ' + r + '%"><span>' + (r === 100 ? '✓' : r) + '</span></span>';
 
   /* ---------- API ---------- */
   const api = async (path, opts = {}) => {
-    const r = await fetch(path, { credentials: 'same-origin', ...opts, headers: { 'x-st-admin': '1', ...(opts.body && !(opts.body instanceof Blob) ? { 'Content-Type': 'application/json' } : {}), ...(opts.headers || {}) } });
+    const r = await fetch(path, { credentials: 'same-origin', ...opts, headers: { 'x-st-admin': '1', ...(typeof opts.body === 'string' ? { 'Content-Type': 'application/json' } : {}), ...(opts.headers || {}) } });
     let data = null;
     try { data = await r.json(); } catch (e) {}
     if (r.status === 401 && path !== '/api/login') { showLogin(true); throw Object.assign(new Error('login'), { status: 401 }); }
@@ -586,6 +819,7 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     const t = document.createElement('div');
     t.className = 'toast' + (err ? ' toast--err' : '');
     t.innerHTML = (err ? ICON.warn : ICON.check) + '<span>' + esc(msg) + '</span>';
+    const close = () => { t.classList.add('out'); setTimeout(() => t.remove(), 320); };
     if (action) {
       const b = document.createElement('button');
       b.type = 'button'; b.textContent = action.label;
@@ -593,19 +827,18 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
       t.appendChild(b);
     }
     $('toasts').appendChild(t);
-    const close = () => { t.classList.add('out'); setTimeout(() => t.remove(), 320); };
     setTimeout(close, ms);
   };
   const confirmBox = ({ title, text, yes, danger = false }) => new Promise(resolve => {
-    const m = $('modal');
+    const m = $('modal'), y = $('modal-yes');
     $('modal-t').textContent = title;
     $('modal-p').textContent = text;
-    const y = $('modal-yes');
     y.textContent = yes;
     y.className = 'btn ' + (danger ? 'btn--danger' : 'btn--gold');
     m.hidden = false;
     requestAnimationFrame(() => m.classList.add('on'));
     y.focus();
+    const key = e => { if (e.key === 'Escape') done(false); };
     const done = v => {
       m.classList.remove('on');
       setTimeout(() => { m.hidden = true; }, 300);
@@ -613,7 +846,6 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
       document.removeEventListener('keydown', key);
       resolve(v);
     };
-    const key = e => { if (e.key === 'Escape') done(false); };
     y.onclick = () => done(true);
     $('modal-no').onclick = () => done(false);
     m.onclick = e => { if (e.target === m) done(false); };
@@ -644,7 +876,7 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
       await api('/api/login', { method: 'POST', body: JSON.stringify({ email: f.email.value, password: f.password.value }) });
       f.password.value = '';
       $('login').hidden = true;
-      if (resumeAfterLogin) { $('app').hidden = false; toast('התחברתם מחדש'); }
+      if (resumeAfterLogin) toast('התחברתם מחדש');
       else await startApp();
     } catch (x) {
       err.textContent = x.status === 429 ? 'יותר מדי ניסיונות. נסו שוב בעוד כמה דקות.'
@@ -655,23 +887,40 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     } finally { btn.classList.remove('is-busy'); btn.disabled = false; }
   });
   $('logout').addEventListener('click', async () => {
-    if (dirty() && !(await confirmBox({ title: 'לצאת בלי לשמור?', text: 'יש שינויים שעוד לא פורסמו באתר. אם תצאו עכשיו הם יימחקו.', yes: 'יציאה בלי שמירה', danger: true }))) return;
+    if (dirty() && !(await confirmBox({ title: 'לצאת בלי לשמור?', text: 'יש שינויים שעוד לא פורסמו באתר. הם יישארו שמורים כטיוטה בדפדפן הזה.', yes: 'יציאה', danger: true }))) return;
     try { await api('/api/logout', { method: 'POST' }); } catch (e) {}
-    saved = snapshot();
-    location.reload();
+    leaving = true;
+    location.href = '/admin';
   });
 
   /* ---------- App ---------- */
+  const setTopH = () => document.documentElement.style.setProperty('--toph', $('top').offsetHeight + 'px');
+  const paintUpdated = at => { $('updated').textContent = at ? 'עודכן לאחרונה ב-' + new Date(at).toLocaleString('he-IL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) + '.' : ''; };
   const startApp = async () => {
     const d = await api('/api/content?admin=1');
-    suites = d.suites || [];
+    suites = (d.suites || []).map(norm);
     saved = snapshot();
-    $('updated').textContent = d.updatedAt ? 'עודכן לאחרונה ב-' + new Date(d.updatedAt).toLocaleString('he-IL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) + '.' : '';
+    paintUpdated(d.updatedAt);
     $('no-storage').hidden = storage;
     $('boot').hidden = true;
     $('app').hidden = false;
-    renderGrid(true);
+    setTopH();
+    route(true);
     paintStatus();
+    offerDraft();
+  };
+
+  // A draft in this browser survives a closed tab or a lost connection.
+  let draftT;
+  const keepDraft = () => {
+    clearTimeout(draftT);
+    draftT = setTimeout(() => { try { dirty() ? localStorage.setItem(DRAFT, JSON.stringify({ base: saved, suites })) : localStorage.removeItem(DRAFT); } catch (e) {} }, 400);
+  };
+  const offerDraft = () => {
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem(DRAFT) || 'null'); } catch (e) {}
+    if (!d || d.base !== saved || JSON.stringify(d.suites) === saved) return;
+    toast('נמצאו שינויים שלא נשמרו מהפעם הקודמת', { action: { label: 'שחזור', run: () => { suites = d.suites.map(norm); route(); paintStatus(); } }, ms: 14000 });
   };
 
   const paintStatus = () => {
@@ -681,21 +930,46 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     $('save').disabled = !d || !storage;
     $('save-m').disabled = !storage;
     $('savebar').classList.toggle('on', d);
-    $('ed-save').disabled = !d || !storage;
+    document.body.classList.toggle('has-save', d);
   };
-  const changed = () => { paintStatus(); };
+  const changed = () => { paintStatus(); keepDraft(); };
 
-  const renderGrid = (animate = false) => {
-    const g = $('grid');
-    $('count').textContent = suites.length === 1 ? 'סוויטה אחת' : suites.length + ' סוויטות';
-    g.innerHTML = suites.map((s, k) => {
+  /* ---------- Routing: #suite=<id> opens the editor ---------- */
+  const route = (first = false) => {
+    const m = /^#suite=([\w-]+)$/.exec(location.hash);
+    const s = m && byId(m[1]);
+    if (s) { openEditor(s.id); return; }
+    editing = null;
+    $('editor').hidden = true;
+    $('list').hidden = false;
+    closePreview();
+    renderList(first === true);
+  };
+  window.addEventListener('hashchange', () => route());
+  const go = id => { if (id) location.hash = 'suite=' + id; else history.pushState(null, '', location.pathname), route(); };
+
+  /* ---------- Suites list ---------- */
+  const renderList = (animate = false) => {
+    const shown = suites.filter(s => !s.hidden).length;
+    const promos = suites.filter(promoLive).length;
+    const photos = suites.reduce((n, s) => n + s.images.length, 0);
+    const ready = suites.length ? Math.round(suites.reduce((n, s) => n + readiness(s), 0) / suites.length) : 0;
+    $('stats').innerHTML =
+      '<li><b>' + suites.length + '</b><span>סוויטות בסך הכל</span></li>' +
+      '<li><b>' + shown + '</b><span>מוצגות באתר</span></li>' +
+      '<li class="gold"><b>' + promos + '</b><span>מבצעים פעילים</span></li>' +
+      '<li><b>' + ready + '%</b><span>מוכנות ממוצעת · ' + photos + ' תמונות</span></li>';
+    $('grid').innerHTML = suites.map((s, k) => {
       const cover = s.images[0];
-      const n = s.images.length;
-      return '<li class="tile" data-id="' + esc(s.id) + '" style="--d:' + (animate ? (k * 0.06).toFixed(2) : 0) + 's">' +
+      const tags = [
+        s.hidden ? '<span class="tag">' + ICON.eyeOff + 'מוסתרת</span>' : '',
+        promoLive(s) ? '<span class="tag tag--gold">' + ICON.tag + esc(s.promo.he || s.promo.en) + '</span>' : '',
+        s.images.length < 2 ? '<span class="tag tag--warn">חסרות תמונות</span>' : ''
+      ].join('');
+      return '<li class="tile' + (s.hidden ? ' is-hidden' : '') + '" data-id="' + esc(s.id) + '" style="--d:' + (animate ? (k * 0.05).toFixed(2) : 0) + 's">' +
         '<div class="tile__media" data-open draggable="true">' +
           (cover ? '<img src="' + esc(img(cover)) + '" alt="" loading="lazy">' : '<div class="tile__empty">' + ICON.photo + 'אין עדיין תמונות</div>') +
-          (s.promo.on && s.promo.he ? '<span class="promo">' + esc(s.promo.he) + '</span>' : '') +
-          (n ? '<span class="tile__photos">' + ICON.photo + n + '</span>' : '') +
+          '<div class="tile__tags">' + tags + '</div>' +
           '<div class="tile__edit"><span>' + ICON.pen + 'עריכת הסוויטה</span></div>' +
         '</div>' +
         '<div class="tile__body">' +
@@ -703,24 +977,21 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
           '<p class="tile__line">' + esc(s.line.he) + '</p>' +
           '<div class="tile__foot">' +
             '<span class="tile__price"><small>החל מ- </small><b>' + fmtPrice(s.price) + '</b></span>' +
-            '<span class="tile__tools">' +
+            '<span class="tile__tools">' + ring(readiness(s)) +
               '<button class="icon-btn" type="button" data-move="-1" aria-label="להזיז קדימה" title="להזיז קדימה"' + (k === 0 ? ' disabled' : '') + '>' + ICON.right + '</button>' +
               '<button class="icon-btn" type="button" data-move="1" aria-label="להזיז אחורה" title="להזיז אחורה"' + (k === suites.length - 1 ? ' disabled' : '') + '>' + ICON.left + '</button>' +
-              '<button class="icon-btn" type="button" data-open aria-label="עריכה" title="עריכה">' + ICON.pen + '</button>' +
             '</span>' +
           '</div>' +
         '</div></li>';
     }).join('') +
-      '<li class="tile tile--add" data-add role="button" tabindex="0" style="--d:' + (animate ? (suites.length * 0.06).toFixed(2) : 0) + 's"><i>' + ICON.plus + '</i>הוספת סוויטה</li>';
+      '<li class="tile tile--add" data-add role="button" tabindex="0" style="--d:' + (animate ? (suites.length * 0.05).toFixed(2) : 0) + 's"><i>' + ICON.plus + '</i>הוספת סוויטה</li>';
   };
-
   const moveSuite = (id, step) => {
     const i = suites.findIndex(s => s.id === id), j = i + step;
     if (i < 0 || j < 0 || j >= suites.length) return;
     [suites[i], suites[j]] = [suites[j], suites[i]];
-    renderGrid(); changed();
+    renderList(); changed();
   };
-
   const grid = $('grid');
   grid.addEventListener('click', e => {
     const t = e.target;
@@ -730,13 +1001,13 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     const mv = t.closest('[data-move]');
     if (mv) return moveSuite(tile.dataset.id, +mv.dataset.move);
     if (t.closest('[data-name]')) return;
-    openEditor(tile.dataset.id);
+    go(tile.dataset.id);
   });
   grid.addEventListener('keydown', e => {
     if (e.target.matches('[data-add]') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); addSuite(); }
     if (e.target.matches('[data-name]')) {
       if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
-      if (e.key === 'Escape') { const s = byId(e.target.closest('.tile').dataset.id); e.target.textContent = s.name.he; e.target.blur(); }
+      if (e.key === 'Escape') { e.target.textContent = byId(e.target.closest('.tile').dataset.id).name.he; e.target.blur(); }
     }
   });
   grid.addEventListener('focusout', e => {
@@ -752,7 +1023,6 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     e.preventDefault();
     document.execCommand('insertText', false, (e.clipboardData.getData('text/plain') || '').replace(/\s+/g, ' '));
   });
-  // Drag tiles to reorder (desktop).
   let dragId = null;
   grid.addEventListener('dragstart', e => {
     const tile = e.target.closest && e.target.closest('.tile[data-id]');
@@ -773,160 +1043,249 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     if (!dragId || !tile) return;
     e.preventDefault();
     const from = suites.findIndex(s => s.id === dragId), to = suites.findIndex(s => s.id === tile.dataset.id);
-    if (from !== to) { const [s] = suites.splice(from, 1); suites.splice(to, 0, s); renderGrid(); changed(); }
+    if (from !== to) { const [s] = suites.splice(from, 1); suites.splice(to, 0, s); renderList(); changed(); }
   });
   grid.addEventListener('dragend', () => { dragId = null; grid.querySelectorAll('.is-drag,.is-over').forEach(x => x.classList.remove('is-drag', 'is-over')); });
-  document.querySelector('[data-add]').addEventListener('click', () => addSuite());
+  document.querySelector('.head [data-add]').addEventListener('click', () => addSuite());
 
   const addSuite = () => {
-    const s = {
-      id: 's' + Date.now().toString(36),
-      name: { he: 'סוויטה חדשה', en: 'New suite' },
-      line: { he: '', en: '' }, mood: { he: '', en: '' }, story: { he: '', en: '' },
-      price: 1200, images: [], promo: { on: false, he: '', en: '' }
-    };
+    const s = norm({ id: 's' + Date.now().toString(36), name: { he: 'סוויטה חדשה', en: 'New suite' }, price: 1200, hidden: true });
     suites.push(s);
-    renderGrid(); changed();
-    openEditor(s.id);
-    setTimeout(() => { const n = $('ed-body').querySelector('[data-f="name"]'); n.focus(); n.select(); }, 500);
+    changed();
+    go(s.id);
+    toast('נוצרה סוויטה חדשה. היא מוסתרת באתר עד שתדליקו את "מוצגת באתר".', { ms: 6000 });
+    setTimeout(() => { const n = document.querySelector('[data-path="name.he"]'); n.focus(); n.select(); }, 450);
   };
 
-  /* ---------- Editor ---------- */
-  const drawer = $('drawer'), scrim = $('scrim');
-  const fields = [...drawer.querySelectorAll('[data-f]')];
-  const counter = (key, len, max) => { const c = drawer.querySelector('[data-count="' + key + '"]'); if (c) { c.textContent = len + '/' + max; c.classList.toggle('over', len >= max); } };
+  /* ---------- Suite editor ---------- */
+  const ed = $('editor');
+  const inputs = [...ed.querySelectorAll('[data-path]')];
+  const getPath = (s, p) => p.split('.').reduce((o, k) => o[k], s);
+  const setPath = (s, p, v) => { const ks = p.split('.'); ks.slice(0, -1).reduce((o, k) => o[k], s)[ks[ks.length - 1]] = v; };
+  const cur = () => byId(editing);
 
-  const paintPreview = () => {
-    const s = byId(editing);
-    if (!s) return;
-    const promo = s.promo.on && s.promo[edLang === 'en' ? 'en' : 'he'];
-    $('pv-media').innerHTML = (s.images[0] ? '<img src="' + esc(img(s.images[0])) + '" alt="">' : '') + (promo ? '<span class="promo">' + esc(promo) + '</span>' : '');
-    $('pv-name').textContent = s.name[edLang] || s.name.he;
-    $('pv-line').textContent = s.line[edLang] || s.line.he;
-    $('pv-price').textContent = fmtPrice(s.price);
-    $('ed-name').textContent = s.name.he || 'סוויטה';
-    $('ed-num').textContent = 'סוויטה ' + pad(suites.indexOf(s) + 1);
+  const openEditor = id => {
+    const other = editing !== id;
+    editing = id;
+    $('list').hidden = true;
+    ed.hidden = false;
+    if (other) { pvSlide = 0; window.scrollTo(0, 0); }
+    fillEditor();
   };
-  const paintFields = () => {
-    const s = byId(editing);
-    fields.forEach(f => {
-      const k = f.dataset.f;
-      f.value = s[k][edLang] || '';
-      f.dir = edLang === 'en' ? 'ltr' : 'rtl';
-      counter(k, f.value.length, f.maxLength);
-    });
-    drawer.querySelectorAll('.seg button').forEach(b => { const on = b.dataset.lang === edLang; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  const fillEditor = () => {
+    const s = cur();
+    inputs.forEach(f => { f.value = getPath(s, f.dataset.path) || ''; });
     $('ed-price').value = s.price;
     $('promo-on').checked = s.promo.on;
-    $('promo-state').textContent = s.promo.on ? 'פעיל' : 'כבוי';
-    $('promo-fields').classList.toggle('off', !s.promo.on);
-    $('promo-he').value = s.promo.he; $('promo-en').value = s.promo.en;
-    counter('promo-he', s.promo.he.length, 60); counter('promo-en', s.promo.en.length, 60);
+    $('promo-until').value = s.promo.until || '';
+    $('vis-on').checked = !s.hidden;
+    paintHead(); paintCounts(); paintPromo(); paintPhotos(); paintReady(); paintPreview();
   };
+  const paintHead = () => {
+    const s = cur(), i = suites.indexOf(s);
+    $('ed-name').textContent = s.name.he || s.name.en || 'סוויטה ללא שם';
+    $('ed-pos').textContent = 'סוויטה ' + pad(i + 1) + ' מתוך ' + pad(suites.length);
+    $('ed-thumb').src = s.images[0] ? img(s.images[0]) : '';
+    $('ed-thumb').style.visibility = s.images[0] ? 'visible' : 'hidden';
+    $('ed-prev').disabled = i <= 0;
+    $('ed-next').disabled = i >= suites.length - 1;
+    const v = $('ed-vis');
+    v.classList.toggle('off', s.hidden);
+    v.querySelector('span').textContent = s.hidden ? 'מוסתרת באתר' : 'מוצגת באתר';
+  };
+  const paintCounts = () => {
+    const s = cur(), c = checks(s);
+    ed.querySelectorAll('[data-count]').forEach(el => {
+      const p = el.dataset.count, f = ed.querySelector('[data-path="' + p + '"]');
+      const n = (getPath(s, p) || '').length;
+      el.textContent = n + '/' + f.maxLength;
+      el.classList.toggle('over', n >= f.maxLength);
+    });
+    ed.querySelectorAll('[data-miss]').forEach(m => { const o = s[m.dataset.miss]; m.hidden = !(o.he.trim() && !o.en.trim()); });
+    const missing = { 's-photos': !c[0].ok, 's-basics': c.slice(1, 4).some(x => !x.ok), 's-story': !c[4].ok };
+    $('toc').querySelectorAll('[data-sec]').forEach(a => { const em = a.querySelector('em'); if (em) em.hidden = !missing[a.dataset.sec]; });
+  };
+  const paintPromo = () => {
+    const p = cur().promo;
+    $('promo-label').textContent = p.on ? 'פעיל' : 'כבוי';
+    $('promo-body').classList.toggle('off', !p.on);
+    const st = $('promo-state');
+    const ended = p.until && p.until < today();
+    st.className = 'promo-state' + (p.on && !ended ? ' live' : '') + (ended ? ' ended' : '');
+    st.textContent = !p.on ? 'כבוי' : ended ? 'הסתיים ב-' + fmtDate(p.until) : p.until ? 'פעיל עד ' + fmtDate(p.until) : 'פעיל, בלי תאריך סיום';
+  };
+  const paintReady = () => {
+    const s = cur(), c = checks(s), r = readiness(s);
+    $('ready').innerHTML =
+      '<div class="ready__head">' + ring(r) + '<div><b>' + (r === 100 ? 'הסוויטה מוכנה' : 'מוכנות הסוויטה') + '</b><small>' + (r === 100 ? 'כל הפרטים מלאים' : 'כדאי להשלים כדי שתיראה מושלם') + '</small></div></div>' +
+      '<ul>' + c.map(x => '<li class="' + (x.ok ? 'ok' : '') + '"><i></i>' + (x.ok ? esc(x.text) : '<button type="button" data-jump="' + x.sec + '">' + esc(x.text) + '</button>') + '</li>').join('') + '</ul>';
+  };
+  $('ready').addEventListener('click', e => { const b = e.target.closest('[data-jump]'); if (b) $(b.dataset.jump).scrollIntoView({ block: 'start' }); });
+
+  // Live preview: the card on the home page, or the suite page on a phone.
+  const paintPreview = () => {
+    const s = cur();
+    if (!s) return;
+    const L = PV[pvLang], tx = o => o[pvLang] || o.he || o.en || '';
+    const name = tx(s.name) || L.blank, imgs = s.images.map(img);
+    const promo = promoLive(s) ? tx(s.promo) : '';
+    const n = suites.indexOf(s) + 1;
+    pvSlide = Math.min(pvSlide, Math.max(0, imgs.length - 1));
+    const stage = $('pv-stage');
+    stage.dir = pvLang === 'en' ? 'ltr' : 'rtl';
+    if (pvMode === 'card') {
+      stage.innerHTML = '<article class="pc">' +
+        '<div class="pc__media">' + imgs.map((u, j) => '<img src="' + esc(u) + '" alt=""' + (j === pvSlide ? ' class="on"' : '') + '>').join('') +
+          (promo ? '<span class="pc__promo">' + esc(promo) + '</span>' : '') +
+          (imgs.length > 1 ? '<span class="pc__dots">' + imgs.map((_, j) => '<i' + (j === pvSlide ? ' class="on"' : '') + '></i>').join('') + '</span>' +
+            '<span class="pc__arrows"><button type="button" data-slide="-1" aria-label="הקודמת">' + ICON.right + '</button><button type="button" data-slide="1" aria-label="הבאה">' + ICON.left + '</button></span>' : '') +
+        '</div>' +
+        '<div class="pc__body"><div class="pc__top"><span class="pc__num">' + pad(n) + '</span><h3 class="pc__name">' + esc(name) + '</h3></div>' +
+        '<p class="pc__line">' + esc(tx(s.line)) + '</p>' +
+        '<div class="pc__foot"><span>' + L.from + ' <b>' + fmtPrice(s.price) + '</b></span><span class="pc__more">' + L.more + '<svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span></div></div>' +
+      '</article>';
+    } else {
+      stage.innerHTML = '<div class="phone"><div class="phone__screen"><div class="phone__notch"></div>' +
+        '<div class="pp__hero">' + (imgs[0] ? '<img src="' + esc(imgs[0]) + '" alt="">' : '') +
+          '<div class="pp__ht">' + (tx(s.mood) ? '<p class="pp__mood">' + esc(tx(s.mood)) + '</p>' : '') + '<h3 class="pp__name">' + esc(name) + '</h3><p class="pp__line">' + esc(tx(s.line)) + '</p></div></div>' +
+        '<div class="pp__body"><p class="pp__label">' + L.suite + ' ' + pad(n) + '</p><p class="pp__story">' + esc(tx(s.story)) + '</p>' +
+          (imgs[1] || imgs[0] ? '<img class="pp__img" src="' + esc(imgs[1] || imgs[0]) + '" alt="">' : '') +
+          (promo ? '<span class="pp__promo">' + esc(promo) + '</span>' : '') +
+          '<div class="pp__price"><small>' + L.from + '</small><b>' + fmtPrice(s.price) + '</b><small>' + L.night + '</small></div>' +
+          '<div class="pp__cta"><span>' + esc(L.ask.replace('{name}', name)) + '</span><i></i></div>' +
+          '<div class="pp__cta pp__cta--ghost"><span>' + L.call + ' 058-408-8554</span><i></i></div>' +
+        '</div></div></div>';
+    }
+  };
+  $('pv-stage').addEventListener('click', e => {
+    const b = e.target.closest('[data-slide]');
+    if (!b) return;
+    const n = cur().images.length;
+    pvSlide = (pvSlide + (+b.dataset.slide) + n) % n;
+    paintPreview();
+  });
+  $('pv-mode').addEventListener('click', e => { const b = e.target.closest('[data-mode]'); if (!b) return; pvMode = b.dataset.mode; $('pv-mode').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); paintPreview(); });
+  $('pv-lang').addEventListener('click', e => { const b = e.target.closest('[data-lang]'); if (!b) return; pvLang = b.dataset.lang; $('pv-lang').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); paintPreview(); });
+  function openPreview() { $('pv').classList.add('on'); $('pv-shade').hidden = false; document.body.classList.add('lock'); }
+  function closePreview() { $('pv').classList.remove('on'); $('pv-shade').hidden = true; document.body.classList.remove('lock'); }
+  $('pv-open').addEventListener('click', openPreview);
+  $('pv-close').addEventListener('click', closePreview);
+  $('pv-shade').addEventListener('click', closePreview);
+
+  // Fields
+  inputs.forEach(f => f.addEventListener('input', () => {
+    const s = cur(), p = f.dataset.path;
+    setPath(s, p, f.value);
+    if (p.startsWith('promo.') && f.value && !s.promo.on) { s.promo.on = true; $('promo-on').checked = true; }
+    paintCounts(); paintReady(); paintPreview();
+    if (p.startsWith('name.')) paintHead();
+    if (p.startsWith('promo.')) paintPromo();
+    changed();
+  }));
+  const setPrice = v => { cur().price = Math.max(0, Math.min(100000, Math.round(+v || 0))); paintReady(); paintPreview(); changed(); };
+  $('ed-price').addEventListener('input', e => setPrice(e.target.value));
+  $('price-steps').addEventListener('click', e => {
+    const b = e.target.closest('[data-d]');
+    if (!b) return;
+    setPrice(cur().price + (+b.dataset.d));
+    $('ed-price').value = cur().price;
+  });
+  $('promo-on').addEventListener('change', e => {
+    const s = cur();
+    s.promo.on = e.target.checked;
+    if (s.promo.on && !s.promo.he) setTimeout(() => ed.querySelector('[data-path="promo.he"]').focus(), 60);
+    paintPromo(); paintPreview(); changed();
+  });
+  $('promo-chips').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    Object.assign(cur().promo, { on: true, he: b.dataset.he, en: b.dataset.en });
+    fillEditor(); changed();
+  });
+  $('promo-until').addEventListener('change', e => { cur().promo.until = e.target.value || ''; paintPromo(); paintPreview(); changed(); });
+  $('promo-clear').addEventListener('click', () => { cur().promo.until = ''; $('promo-until').value = ''; paintPromo(); paintPreview(); changed(); });
+  const setHidden = h => {
+    cur().hidden = h; $('vis-on').checked = !h; paintHead(); changed();
+    toast(h ? 'הסוויטה תוסתר באתר אחרי השמירה.' : 'הסוויטה תוצג באתר אחרי השמירה.');
+  };
+  $('vis-on').addEventListener('change', e => setHidden(!e.target.checked));
+  $('ed-vis').addEventListener('click', () => setHidden(!cur().hidden));
+  $('ed-back').addEventListener('click', () => go(''));
+  $('ed-prev').addEventListener('click', () => { const i = suites.indexOf(cur()); if (i > 0) go(suites[i - 1].id); });
+  $('ed-next').addEventListener('click', () => { const i = suites.indexOf(cur()); if (i < suites.length - 1) go(suites[i + 1].id); });
+  $('ed-dup').addEventListener('click', () => {
+    const s = cur(), i = suites.indexOf(s);
+    const c = norm(JSON.parse(JSON.stringify(s)));
+    c.id = 's' + Date.now().toString(36);
+    c.name.he = (s.name.he || 'סוויטה') + ' (עותק)';
+    c.name.en = s.name.en ? s.name.en + ' (copy)' : '';
+    c.hidden = true;
+    suites.splice(i + 1, 0, c);
+    changed(); go(c.id);
+    toast('נוצר עותק מוסתר. שנו מה שצריך והדליקו את "מוצגת באתר".', { ms: 6000 });
+  });
+  $('ed-delete').addEventListener('click', async () => {
+    const s = cur();
+    const ok = await confirmBox({ title: 'למחוק את "' + (s.name.he || 'הסוויטה') + '"?', text: 'הסוויטה והתמונות שלה יוסרו מהאתר אחרי שתלחצו על שמירה ופרסום. עד אז אפשר עוד לבטל.', yes: 'מחיקת הסוויטה', danger: true });
+    if (!ok) return;
+    const idx = suites.indexOf(s);
+    suites.splice(idx, 1);
+    changed(); go('');
+    toast('הסוויטה נמחקה', { action: { label: 'ביטול', run: () => { suites.splice(idx, 0, s); renderList(); changed(); } }, ms: 8000 });
+  });
+
+  // Section menu follows the scroll.
+  const tocLinks = [...$('toc').querySelectorAll('a')];
+  $('toc').addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    e.preventDefault();
+    $(a.dataset.sec).scrollIntoView({ block: 'start' });
+  });
+  const spy = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    tocLinks.forEach(a => {
+      const on = a.dataset.sec === en.target.id;
+      a.classList.toggle('on', on);
+      const list = a.closest('ol');
+      if (on && list.scrollWidth > list.clientWidth) list.scrollTo({ left: a.offsetLeft - list.clientWidth / 2 + a.offsetWidth / 2, behavior: 'smooth' });
+    });
+  }), { rootMargin: '-35% 0px -60% 0px' });
+  ed.querySelectorAll('.sec').forEach(s => spy.observe(s));
+
+  /* ---------- Photos ---------- */
   const paintPhotos = () => {
-    const s = byId(editing);
+    const s = cur();
     const ups = uploads[s.id] || [];
     const total = s.images.length + ups.length;
-    $('ph-count').textContent = total + '/' + MAX_PHOTOS;
-    $('photos').innerHTML = s.images.map((u, i) =>
+    $('ph-count').textContent = total + ' / ' + MAX_PHOTOS;
+    const last = s.images.length - 1;
+    $('gal').innerHTML = s.images.map((u, i) =>
       '<div class="ph" draggable="true" data-i="' + i + '">' +
         '<img src="' + esc(img(u)) + '" alt="תמונה ' + (i + 1) + '" loading="lazy">' +
-        (i === 0 ? '<span class="ph__main">ראשית</span>' : '') +
+        (i === 0 ? '<span class="ph__main">' + ICON.star + 'ראשית</span>' : '<span class="ph__n">' + (i + 1) + '</span>') +
         '<div class="ph__tools">' +
           '<button type="button" data-ph="prev" aria-label="להקדים" title="להקדים"' + (i === 0 ? ' disabled' : '') + '>' + ICON.right + '</button>' +
+          (i > 0 ? '<button type="button" data-ph="main" aria-label="להפוך לראשית" title="להפוך לראשית">' + ICON.star + '</button>' : '') +
           '<button type="button" data-ph="rep" aria-label="להחליף תמונה" title="להחליף">' + ICON.swap + '</button>' +
           '<button type="button" class="del" data-ph="del" aria-label="מחיקת תמונה" title="מחיקה">' + ICON.trash + '</button>' +
-          '<button type="button" data-ph="next" aria-label="לאחר" title="לאחר"' + (i === s.images.length - 1 ? ' disabled' : '') + '>' + ICON.left + '</button>' +
+          '<button type="button" data-ph="next" aria-label="לאחר" title="לאחר"' + (i === last ? ' disabled' : '') + '>' + ICON.left + '</button>' +
         '</div></div>'
     ).join('') + ups.map(u =>
       '<div class="ph ph--up' + (u.err ? ' ph--err' : '') + '">' +
         '<img src="' + u.preview + '" alt="">' +
         '<div class="ph__prog" style="--p:' + u.p.toFixed(3) + '">' + (u.err ? 'נכשל' : '<svg viewBox="0 0 50 50"><circle class="bg" cx="25" cy="25" r="22"/><circle class="fg" cx="25" cy="25" r="22"/></svg>' + Math.round(u.p * 100) + '%') + '</div>' +
       '</div>'
-    ).join('') + (total < MAX_PHOTOS && storage ? '<button type="button" class="drop" id="drop">' + ICON.plus + '<span>הוספת תמונות<br><small class="muted">או גררו לכאן</small></span></button>' : '');
+    ).join('') + (total && total < MAX_PHOTOS && storage ? '<button type="button" class="drop" data-pick>' + ICON.plus + '<span>הוספת תמונות<br><small class="muted">או גוררים לכאן</small></span></button>' : '');
+    $('gal').hidden = !total;
+    $('gal-empty').classList.toggle('on', !total);
+    $('gal-empty').querySelector('[data-pick]').disabled = !storage;
   };
-
-  let lastFocus = null;
-  const openEditor = id => {
-    editing = id; edLang = 'he';
-    lastFocus = document.activeElement;
-    paintFields(); paintPhotos(); paintPreview(); paintStatus();
-    $('ed-body').scrollTop = 0;
-    scrim.hidden = false; drawer.hidden = false;
-    document.body.classList.add('lock');
-    requestAnimationFrame(() => requestAnimationFrame(() => { scrim.classList.add('on'); drawer.classList.add('on'); }));
-    setTimeout(() => $('ed-close').focus({ preventScroll: true }), 50);
-  };
-  const closeEditor = () => {
-    if (!editing) return;
-    editing = null;
-    scrim.classList.remove('on'); drawer.classList.remove('on');
-    document.body.classList.remove('lock');
-    setTimeout(() => { if (!editing) { scrim.hidden = true; drawer.hidden = true; } }, 600);
-    renderGrid();
-    if (lastFocus && lastFocus.isConnected) lastFocus.focus({ preventScroll: true });
-  };
-  $('ed-close').addEventListener('click', closeEditor);
-  $('ed-done').addEventListener('click', closeEditor);
-  scrim.addEventListener('click', closeEditor);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && editing && $('modal').hidden) closeEditor(); });
-
-  drawer.querySelector('.seg').addEventListener('click', e => {
-    const b = e.target.closest('[data-lang]');
-    if (!b) return;
-    edLang = b.dataset.lang; paintFields(); paintPreview();
-  });
-  fields.forEach(f => f.addEventListener('input', () => {
-    const s = byId(editing), k = f.dataset.f;
-    s[k][edLang] = f.value;
-    if (k === 'name' && edLang === 'he' && !f.value.trim()) { /* keep typing; an empty name is filled back on save */ }
-    counter(k, f.value.length, f.maxLength);
-    paintPreview(); changed();
-  }));
-  $('ed-price').addEventListener('input', e => {
-    const v = Math.max(0, Math.min(100000, Math.round(+e.target.value || 0)));
-    byId(editing).price = v; paintPreview(); changed();
-  });
-  $('promo-on').addEventListener('change', e => {
-    const s = byId(editing);
-    s.promo.on = e.target.checked;
-    if (s.promo.on && !s.promo.he) { setTimeout(() => $('promo-he').focus(), 50); }
-    $('promo-state').textContent = s.promo.on ? 'פעיל' : 'כבוי';
-    $('promo-fields').classList.toggle('off', !s.promo.on);
-    paintPreview(); changed();
-  });
-  ['he', 'en'].forEach(l => $('promo-' + l).addEventListener('input', e => {
-    const s = byId(editing);
-    s.promo[l] = e.target.value;
-    if (e.target.value && !s.promo.on) { s.promo.on = true; $('promo-on').checked = true; $('promo-state').textContent = 'פעיל'; $('promo-fields').classList.remove('off'); }
-    counter('promo-' + l, e.target.value.length, 60);
-    paintPreview(); changed();
-  }));
-  $('promo-chips').addEventListener('click', e => {
-    const b = e.target.closest('button');
-    if (!b) return;
-    const s = byId(editing);
-    s.promo = { on: true, he: b.dataset.he, en: b.dataset.en };
-    paintFields(); paintPreview(); changed();
-  });
-  $('ed-delete').addEventListener('click', async () => {
-    const s = byId(editing);
-    const ok = await confirmBox({ title: 'למחוק את "' + (s.name.he || 'הסוויטה') + '"?', text: 'הסוויטה והתמונות שלה יוסרו מהאתר אחרי שתלחצו על שמירה ופרסום. עד אז אפשר עוד לבטל.', yes: 'מחיקת הסוויטה', danger: true });
-    if (!ok) return;
-    const idx = suites.indexOf(s);
-    suites.splice(idx, 1);
-    closeEditor(); changed();
-    toast('הסוויטה נמחקה', { action: { label: 'ביטול', run: () => { suites.splice(idx, 0, s); renderGrid(); changed(); } }, ms: 7000 });
-  });
-
-  /* ---------- Photos ---------- */
   const shrink = async file => {
     const MAX = 2400;
     let src;
     try { src = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
-    catch (e) {
-      src = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(file); });
-    }
+    catch (e) { src = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(file); }); }
     const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
     const k = Math.min(1, MAX / Math.max(w, h));
     const cv = document.createElement('canvas');
@@ -948,103 +1307,113 @@ textarea.in { min-height: 132px; resize: vertical; line-height: 1.6; }
     x.onerror = () => reject(new Error('network'));
     x.send(blob);
   });
+  const afterPhotos = () => { paintPhotos(); paintHead(); paintCounts(); paintReady(); paintPreview(); changed(); };
   const uploadFiles = async (files, replaceAt = -1) => {
-    const s = byId(editing);
+    const s = cur();
     if (!s) return;
+    if (!storage) { toast('האחסון לא מחובר, אי אפשר להעלות תמונות.', { err: true }); return; }
     files = [...files].filter(f => /^image\//.test(f.type) || /\.(heic|heif|jpe?g|png|webp)$/i.test(f.name));
     if (!files.length) return;
-    const room = MAX_PHOTOS - s.images.length - (uploads[s.id] || []).length;
-    if (replaceAt < 0 && files.length > room) { toast('אפשר עד ' + MAX_PHOTOS + ' תמונות לסוויטה. הועלו רק ' + Math.max(0, room) + '.', { err: true }); files = files.slice(0, Math.max(0, room)); }
     const list = uploads[s.id] = uploads[s.id] || [];
+    const room = MAX_PHOTOS - s.images.length - list.length;
+    if (replaceAt < 0 && files.length > room) { toast('אפשר עד ' + MAX_PHOTOS + ' תמונות לסוויטה. הועלו רק ' + Math.max(0, room) + '.', { err: true }); files = files.slice(0, Math.max(0, room)); }
+    const repaint = () => { if (editing === s.id) paintPhotos(); };
+    const drop = u => { const i = list.indexOf(u); if (i >= 0) list.splice(i, 1); };
     await Promise.all(files.map(async file => {
-      const u = { key: Math.random(), preview: URL.createObjectURL(file), p: 0.02, err: false };
+      const u = { preview: URL.createObjectURL(file), p: 0.02, err: false };
       list.push(u);
-      const repaint = () => { if (editing === s.id) paintPhotos(); };
       repaint();
       try {
-        const blob = await shrink(file);
-        const url = await send(blob, p => { u.p = Math.min(0.97, p); repaint(); });
-        list.splice(list.indexOf(u), 1);
+        const url = await send(await shrink(file), p => { u.p = Math.min(0.97, p); repaint(); });
+        drop(u);
         if (replaceAt >= 0) s.images[replaceAt] = url; else s.images.push(url);
-        changed(); repaint(); if (editing === s.id) paintPreview();
+        if (editing === s.id) afterPhotos(); else changed();
       } catch (e) {
-        if (e.message === 'login') { const i = list.indexOf(u); if (i >= 0) list.splice(i, 1); repaint(); return; }
+        if (e.message === 'login') { drop(u); repaint(); return; }
         u.err = true; repaint();
-        toast(e.message === 'no_storage' ? 'האחסון לא מחובר, אי אפשר להעלות תמונות.' : 'העלאת התמונה נכשלה. נסו שוב.', { err: true });
-        setTimeout(() => { const i = list.indexOf(u); if (i >= 0) { list.splice(i, 1); repaint(); } }, 3000);
+        toast('העלאת התמונה נכשלה. נסו שוב.', { err: true });
+        setTimeout(() => { drop(u); repaint(); }, 3000);
       }
     }));
   };
   let repIndex = -1;
-  $('photos').addEventListener('click', async e => {
-    if (e.target.closest('#drop')) { $('file-add').click(); return; }
+  ed.addEventListener('click', e => { if (e.target.closest('[data-pick]')) $('file-add').click(); });
+  $('gal').addEventListener('click', e => {
     const b = e.target.closest('[data-ph]');
     if (!b) return;
-    const s = byId(editing), i = +b.closest('.ph').dataset.i;
-    const act = b.dataset.ph;
+    const s = cur(), i = +b.closest('.ph').dataset.i, act = b.dataset.ph;
     if (act === 'prev' && i > 0) [s.images[i - 1], s.images[i]] = [s.images[i], s.images[i - 1]];
     if (act === 'next' && i < s.images.length - 1) [s.images[i + 1], s.images[i]] = [s.images[i], s.images[i + 1]];
+    if (act === 'main') s.images.unshift(s.images.splice(i, 1)[0]);
     if (act === 'rep') { repIndex = i; $('file-rep').click(); return; }
     if (act === 'del') {
       const [gone] = s.images.splice(i, 1);
-      toast('התמונה הוסרה', { action: { label: 'ביטול', run: () => { s.images.splice(i, 0, gone); if (editing === s.id) { paintPhotos(); paintPreview(); } changed(); } }, ms: 6000 });
+      toast('התמונה הוסרה', { action: { label: 'ביטול', run: () => { s.images.splice(i, 0, gone); if (editing === s.id) afterPhotos(); else changed(); } }, ms: 7000 });
     }
-    paintPhotos(); paintPreview(); changed();
+    pvSlide = 0;
+    afterPhotos();
   });
   $('file-add').addEventListener('change', e => { uploadFiles(e.target.files); e.target.value = ''; });
   $('file-rep').addEventListener('change', e => { if (e.target.files[0] && repIndex >= 0) uploadFiles([e.target.files[0]], repIndex); e.target.value = ''; repIndex = -1; });
   // Drag photos to reorder, or drop files from the computer.
   let phFrom = -1;
-  const photos = $('photos');
-  photos.addEventListener('dragstart', e => {
+  const gal = $('gal');
+  gal.addEventListener('dragstart', e => {
     const ph = e.target.closest('.ph[data-i]');
     if (!ph) return;
     phFrom = +ph.dataset.i; ph.classList.add('is-drag');
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', 'ph');
   });
-  photos.addEventListener('dragover', e => {
-    e.preventDefault();
-    const files = e.dataTransfer.types.includes('Files');
-    photos.classList.toggle('is-over', files);
-    photos.querySelectorAll('.is-over').forEach(x => x.classList.remove('is-over'));
-    const ph = e.target.closest('.ph[data-i]');
-    if (!files && ph && +ph.dataset.i !== phFrom) ph.classList.add('is-over');
+  [gal, $('gal-empty')].forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      const files = e.dataTransfer.types.includes('Files');
+      zone.classList.toggle('is-over', files);
+      gal.querySelectorAll('.ph.is-over').forEach(x => x.classList.remove('is-over'));
+      const ph = e.target.closest('.ph[data-i]');
+      if (!files && ph && +ph.dataset.i !== phFrom) ph.classList.add('is-over');
+    });
+    zone.addEventListener('dragleave', e => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('is-over'); });
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('is-over');
+      if (e.dataTransfer.files && e.dataTransfer.files.length) { uploadFiles(e.dataTransfer.files); return; }
+      const ph = e.target.closest('.ph[data-i]');
+      if (phFrom < 0 || !ph) return;
+      const s = cur(), to = +ph.dataset.i;
+      const [m] = s.images.splice(phFrom, 1); s.images.splice(to, 0, m);
+      phFrom = -1; pvSlide = 0; afterPhotos();
+    });
   });
-  photos.addEventListener('dragleave', e => { if (!photos.contains(e.relatedTarget)) photos.classList.remove('is-over'); });
-  photos.addEventListener('drop', e => {
-    e.preventDefault();
-    photos.classList.remove('is-over');
-    if (e.dataTransfer.files && e.dataTransfer.files.length) { uploadFiles(e.dataTransfer.files); return; }
-    const ph = e.target.closest('.ph[data-i]');
-    if (phFrom < 0 || !ph) return;
-    const s = byId(editing), to = +ph.dataset.i;
-    const [m] = s.images.splice(phFrom, 1); s.images.splice(to, 0, m);
-    phFrom = -1; paintPhotos(); paintPreview(); changed();
-  });
-  photos.addEventListener('dragend', () => { phFrom = -1; photos.querySelectorAll('.is-drag,.is-over').forEach(x => x.classList.remove('is-drag', 'is-over')); });
+  gal.addEventListener('dragend', () => { phFrom = -1; gal.querySelectorAll('.is-drag,.is-over').forEach(x => x.classList.remove('is-drag', 'is-over')); });
 
   /* ---------- Save ---------- */
-  const busy = on => ['save', 'save-m', 'ed-save'].forEach(id => { $(id).classList.toggle('is-busy', on); if (on) $(id).disabled = true; });
+  const busy = on => ['save', 'save-m'].forEach(id => { $(id).classList.toggle('is-busy', on); if (on) $(id).disabled = true; });
   const save = async () => {
+    if (!storage) { toast('אי אפשר לשמור: האחסון לא מחובר ב-Vercel.', { err: true }); return; }
     if (Object.values(uploads).some(l => l.some(u => !u.err))) { toast('רגע, עדיין מעלים תמונות.', { err: true }); return; }
     suites.forEach(s => { if (!s.name.he.trim()) s.name.he = s.name.en.trim() || 'סוויטה'; });
     busy(true);
     try {
       const d = await api('/api/content', { method: 'PUT', body: JSON.stringify({ suites }) });
-      suites = d.suites;
+      suites = d.suites.map(norm);
       saved = snapshot();
-      $('updated').textContent = 'עודכן לאחרונה ב-' + new Date(d.updatedAt).toLocaleString('he-IL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) + '.';
-      if (editing) { paintFields(); paintPhotos(); paintPreview(); }
-      renderGrid();
+      try { localStorage.removeItem(DRAFT); } catch (e) {}
+      paintUpdated(d.updatedAt);
+      if (editing && byId(editing)) fillEditor(); else renderList();
       toast('נשמר. השינויים יופיעו באתר תוך דקה-שתיים.', { ms: 5000 });
     } catch (e) {
       if (e.message !== 'login') toast(e.status === 503 ? 'האחסון לא מחובר ב-Vercel, אי אפשר לשמור.' : 'השמירה נכשלה. נסו שוב.', { err: true });
     } finally { busy(false); paintStatus(); }
   };
-  ['save', 'save-m', 'ed-save'].forEach(id => $(id).addEventListener('click', () => save()));
-  document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's' && !$('app').hidden) { e.preventDefault(); if (dirty()) save(); } });
-  window.addEventListener('beforeunload', e => { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
+  ['save', 'save-m'].forEach(id => $(id).addEventListener('click', () => save()));
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's' && !$('app').hidden) { e.preventDefault(); if (dirty()) save(); }
+    if (e.key === 'Escape' && $('pv').classList.contains('on')) closePreview();
+  });
+  window.addEventListener('beforeunload', e => { if (dirty() && !leaving) { e.preventDefault(); e.returnValue = ''; } });
+  window.addEventListener('resize', setTopH);
 
   /* ---------- Boot ---------- */
   fetch('/api/session', { credentials: 'same-origin' })
