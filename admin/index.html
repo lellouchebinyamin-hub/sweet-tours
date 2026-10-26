@@ -6,6 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#0F2A33">
 <title>Sweet tours | ניהול</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Frank+Ruhl+Libre:wght@300;400;500&display=swap">
@@ -450,6 +453,8 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
 .savebar { display: none; }
+.top__logo { display: block; width: auto; height: 40px; }
+.login__brand img { width: auto; height: 72px; filter: drop-shadow(0 2px 14px rgba(8, 20, 25, .4)); }
 .boot { min-height: 100svh; display: grid; place-items: center; background: var(--sea); color: var(--on-sea); }
 .boot .spin { width: 28px; height: 28px; color: var(--gold); }
 
@@ -497,6 +502,8 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
   .login__panel { align-items: start; padding-block: 32px 40px; }
   .top { gap: 10px; padding-block: 10px; }
   .top .brandmark { font-size: 19px; }
+  .top__logo { height: 34px; }
+  .login__brand img { height: 56px; }
   .top__chip, .top__status span, .top .hide-m { display: none; }
   .head .btn { display: none; }
   .stats { margin: 22px 0 24px; }
@@ -555,7 +562,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
 <div class="login" id="login" hidden>
   <aside class="login__art" aria-hidden="true">
     <img src="/img/moment-1.jpg" alt="">
-    <div class="login__brand brandmark">Sweet tours<small>Suites · Netanya</small></div>
+    <div class="login__brand"><img src="/img/logo-light.png" alt="Sweet Tours" width="530" height="240"></div>
     <p class="login__quote">כאן מעדכנים את <em>הים</em> שלכם.</p>
   </aside>
   <main class="login__panel">
@@ -582,7 +589,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
 <!-- App -->
 <div id="app" hidden>
   <header class="top" id="top">
-    <a class="brandmark" href="#">Sweet tours</a>
+    <a class="brandmark" href="#"><img class="top__logo" src="/img/logo-light.png" alt="Sweet Tours" width="530" height="240"></a>
     <span class="top__chip">ניהול</span>
     <span class="top__status" id="status" aria-live="polite"><i></i><span id="status-text">הכל שמור</span></span>
     <div class="top__acts">
