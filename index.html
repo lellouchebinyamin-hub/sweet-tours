@@ -1262,6 +1262,63 @@ h1 em { font-style: normal; color: var(--gold-soft); }
 [dir="ltr"] .eyebrow { letter-spacing: .3em; text-transform: uppercase; font-size: 12px; }
 [dir="ltr"] .price__label { text-transform: uppercase; }
 
+
+/* ---------- Gesture hints without words: scroll down, swipe sideways ---------- */
+@keyframes cue-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes cue-bob { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(4px); } }
+@keyframes cue-fade { 0%, 100% { opacity: .3; } 45% { opacity: 1; } }
+@keyframes cue-ring { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } }
+@keyframes swipe-hand { 0% { opacity: 0; transform: translateX(calc(var(--sx) * -34px)) rotate(calc(var(--sx) * -8deg)); } 18% { opacity: 1; } 70% { opacity: 1; transform: translateX(calc(var(--sx) * 34px)) rotate(calc(var(--sx) * 6deg)); } 100% { opacity: 0; transform: translateX(calc(var(--sx) * 34px)) rotate(calc(var(--sx) * 6deg)); } }
+@keyframes swipe-trail { 0% { transform: scaleX(0); opacity: 0; } 20% { opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes card-nudge { 0%, 100% { transform: none; } 45%, 60% { transform: translateX(calc(var(--sx) * 44px)); } }
+#page { --sx: 1; }
+#page[dir="ltr"] { --sx: -1; }
+.cue-dot {
+  position: relative; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%;
+  border: 1px solid rgba(247, 242, 234, .38); background: rgba(8, 20, 25, .3);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: var(--on-image); pointer-events: none;
+}
+.cue-dot::before { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid var(--gold-soft); opacity: 0; animation: cue-ring 2s .8s var(--ease-out) infinite; }
+.cue-dot svg { width: 22px; height: 22px; animation: cue-bob 2s .8s ease-in-out infinite; }
+.cue-dot path { animation: cue-fade 2s .8s ease-in-out infinite; }
+.cue-dot path + path { animation-delay: 1.05s; }
+.story__cue { margin-top: 6px; }
+.scroll-cue, .rail, .swipe { display: none; }
+@media (max-width: 860px) {
+  .scroll-cue {
+    display: grid; position: fixed; z-index: 17; left: 50%; bottom: max(18px, env(safe-area-inset-bottom, 0px)); margin-left: -25px;
+    opacity: 0; animation: cue-in .9s 2.6s var(--ease-out) forwards;
+    transition: opacity .45s var(--ease-out), transform .45s var(--ease-out);
+  }
+  .scroll-cue::before, .scroll-cue svg, .scroll-cue path { animation-delay: 3.4s; }
+  .scroll-cue path + path { animation-delay: 3.65s; }
+  .scroll-cue.gone { opacity: 0 !important; transform: translateY(18px); }
+  .story__hint { font-size: 14px; color: var(--on-image); }
+
+  .suites { position: relative; }
+  .rail { display: flex; justify-content: center; gap: 6px; margin-top: 22px; }
+  .rail b { width: 6px; height: 6px; border-radius: 99px; background: rgba(20, 24, 28, .2); transition: width .5s var(--ease-out), background .5s var(--ease-out); }
+  .rail b.on { width: 26px; background: var(--gold); }
+  .swipe {
+    position: absolute; z-index: 3; left: 50%; top: var(--swipe-y, 50%);
+    display: grid; place-items: center; width: 96px; height: 96px; margin: -48px 0 0 -48px;
+    color: var(--on-image); pointer-events: none; visibility: hidden; opacity: 0;
+    transition: opacity .4s var(--ease-out), visibility 0s .4s;
+  }
+  .swipe.on { visibility: visible; opacity: 1; transition: opacity .4s var(--ease-out); }
+  .swipe::before { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: rgba(8, 20, 25, .45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .5); }
+  .swipe i { position: absolute; top: 50%; left: 24px; right: 24px; height: 2px; margin-top: 17px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--gold-soft)); transform-origin: left; opacity: 0; }
+  #page[dir="rtl"] .swipe i { background: linear-gradient(90deg, var(--gold-soft), transparent); transform-origin: right; }
+  .swipe svg { position: relative; width: 34px; height: 34px; }
+  .swipe.on i { animation: swipe-trail 1.6s .2s ease-in-out 3 both; }
+  .swipe.on svg { animation: swipe-hand 1.6s .2s ease-in-out 3 both; }
+  .cards.nudge > li { animation: card-nudge 1.6s .2s ease-in-out 3; }
+  .who__track { touch-action: pan-y; }
+  .who__pin > .swipe { z-index: 4; }
+  .who__pin > .swipe::before { background: rgba(226, 185, 138, .14); border: 1px solid rgba(226, 185, 138, .45); box-shadow: none; }
+  .who__pin > .swipe svg { color: var(--gold-soft); }
+}
+
 /* ---------- Mobile composition ---------- */
 @media (max-width: 860px) {
   .nav { padding-block: 18px; }
@@ -1429,6 +1486,8 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       <p class="suites__lede" data-t="suitesLede" data-reveal="fade">x</p>
     </div>
     <ul class="cards" id="cards" data-reveal="stagger"></ul>
+    <div class="rail" id="rail" aria-hidden="true"></div>
+    <span class="swipe" id="swipe" aria-hidden="true"><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11v-1a2 2 0 0 0-4 0"/><path d="M14 10V9a2 2 0 0 0-4 0v1"/><path d="M10 9.5V4a2 2 0 0 0-4 0v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
   </section>
 
   <section class="story" id="experience" aria-labelledby="story-title">
@@ -1443,6 +1502,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
         <p class="label" data-t="expLabel">x</p>
         <h2 id="story-title"><span data-t="expT1">x</span><span data-t="expT2">x</span></h2>
         <p class="story__hint" data-t="expHint">x</p>
+        <span class="cue-dot story__cue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7l6 6 6-6"/><path d="M6 13l6 6 6-6"/></svg></span>
       </div>
       <div class="story__count" aria-hidden="true"><b><i>01<br>02<br>03</i></b><small>/ 03</small></div>
       <div class="story__moments wrap">
@@ -1522,6 +1582,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
         <p class="label" data-t="whoLabel">x</p>
         <p class="who__count" aria-hidden="true"><b><i>01<br>02<br>03<br>04<br>05</i></b> / 05</p>
       </div>
+      <span class="swipe" id="who-swipe" aria-hidden="true"><i></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11v-1a2 2 0 0 0-4 0"/><path d="M14 10V9a2 2 0 0 0-4 0v1"/><path d="M10 9.5V4a2 2 0 0 0-4 0v10"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
       <div class="who__track" id="who-track">
         <div class="who__intro">
           <h2 id="who-title"><span data-t="whoT1">x</span><br><em data-t="whoT2">x</em></h2>
@@ -1680,6 +1741,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     </div>
   </footer>
   <a class="fab" id="fab" data-wa="waHello" href="https://wa.me/972584088554" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.3 2 2.5 4.3 4.6 4.6l1.2-1.2 1.7.9"/></svg><span data-t="fWa">x</span></a>
+  <span class="cue-dot scroll-cue" id="scroll-cue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7l6 6 6-6"/><path d="M6 13l6 6 6-6"/></svg></span>
 
 
   <div class="sd" id="detail" role="dialog" aria-modal="true" aria-labelledby="detail-name" hidden>
@@ -2313,6 +2375,42 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     }), { rootMargin: '100px 0px' }).observe(who);
   } else { wCards.forEach(c => c.classList.add('seen')); }
   window.stWhoLayout = wLayout;
+
+  /* A sideways swipe on the pinned track moves it too: the finger becomes page scroll, then it settles on a card. */
+  const wSwipe = document.getElementById('who-swipe');
+  const wPerPx = () => (who.offsetHeight - window.innerHeight) / (wDist || 1);
+  const wSign = () => (page.dir === 'rtl' ? 1 : -1);
+  let tx0 = 0, ty0 = 0, sy0 = 0, wDrag = null, tT = 0, tLastX = 0, tV = 0;
+  wTrack.addEventListener('touchstart', e => {
+    if (!who.classList.contains('who--pinned')) return;
+    const t = e.touches[0];
+    tx0 = tLastX = t.clientX; ty0 = t.clientY; sy0 = window.scrollY; wDrag = null; tT = performance.now(); tV = 0;
+    if (wSwipe) wSwipe.classList.remove('on');
+  }, { passive: true });
+  wTrack.addEventListener('touchmove', e => {
+    if (!who.classList.contains('who--pinned')) return;
+    const t = e.touches[0], dx = t.clientX - tx0, dy = t.clientY - ty0;
+    if (wDrag === null && Math.abs(dx) + Math.abs(dy) > 8) wDrag = Math.abs(dx) > Math.abs(dy);
+    if (!wDrag) return;
+    const now = performance.now();
+    tV = (t.clientX - tLastX) / Math.max(1, now - tT); tLastX = t.clientX; tT = now;
+    window.scrollTo(0, sy0 + dx * wSign() * wPerPx());
+  }, { passive: true });
+  wTrack.addEventListener('touchend', () => {
+    if (!wDrag) return;
+    wDrag = null;
+    const vw = window.innerWidth;
+    const items = [...wTrack.children];
+    const ds = items.map(el => { const r = el.getBoundingClientRect(); return r.left + r.width / 2 - vw / 2; });
+    let k = 0;
+    ds.forEach((d, i) => { if (Math.abs(d) < Math.abs(ds[k])) k = i; });
+    // A quick flick that has not travelled far yet still goes to the neighbour in the finger's direction.
+    if (Math.abs(tV) > 0.35 && Math.abs(ds[k]) < vw * 0.2) {
+      const fwd = tV * wSign() > 0;
+      k = Math.max(0, Math.min(items.length - 1, k + (fwd ? 1 : -1)));
+    }
+    window.scrollTo({ top: window.scrollY - ds[k] * wSign() * wPerPx(), behavior: 'smooth' });
+  }, { passive: true });
   if (document.fonts) document.fonts.ready.then(wLayout);
   window.addEventListener('load', wLayout);
 
@@ -2642,6 +2740,76 @@ void main(){
     if (!document.hidden && !still) raf = requestAnimationFrame(frame);
   });
   raf = requestAnimationFrame(frame);
+})();
+</script>
+<script>
+/* Mobile gesture hints: a scroll-down cue on the hero, a swipe demo on the suites and on the "who" track. */
+(() => {
+  const mq = window.matchMedia('(max-width: 860px)');
+  const cue = document.getElementById('scroll-cue');
+  const hideCue = () => {
+    if (!cue || cue.classList.contains('gone')) return;
+    cue.classList.add('gone');
+    setTimeout(() => cue.remove(), 600);
+  };
+  if (window.scrollY > 40) hideCue();
+  window.addEventListener('scroll', () => { if (window.scrollY > 40) hideCue(); }, { passive: true });
+
+  // Shows a hint for a few seconds; returns a function that ends it early.
+  const demo = (el, start, end, ms) => {
+    start();
+    el.classList.add('on');
+    const t = setTimeout(() => { el.classList.remove('on'); end(); }, ms);
+    return () => { clearTimeout(t); el.classList.remove('on'); end(); };
+  };
+
+  // Suites carousel: dots that follow the scroll, plus one swipe demo the first time it comes into view.
+  const cards = document.getElementById('cards');
+  const rail = document.getElementById('rail');
+  const swipe = document.getElementById('swipe');
+  if (cards && rail && swipe) {
+    const step = () => { const li = cards.children[0]; return li ? li.getBoundingClientRect().width + (parseFloat(getComputedStyle(cards).columnGap) || 14) : 1; };
+    const paint = () => {
+      const k = Math.round(Math.abs(cards.scrollLeft) / step());
+      [...rail.children].forEach((b, i) => b.classList.toggle('on', i === k));
+    };
+    const build = () => { rail.innerHTML = '<b></b>'.repeat(cards.children.length); paint(); };
+    new MutationObserver(build).observe(cards, { childList: true });
+    build();
+    let raf = 0, stop = () => {}, done = false;
+    cards.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(paint); stop(); }, { passive: true });
+    cards.addEventListener('touchstart', () => { done = true; stop(); }, { passive: true });
+    const play = () => {
+      if (done || !mq.matches || cards.children.length < 2 || Math.abs(cards.scrollLeft) > 4) return;
+      done = true;
+      const first = cards.children[0], img = first.querySelector('img');
+      const h = img ? img.getBoundingClientRect().height : first.getBoundingClientRect().height;
+      swipe.style.setProperty('--swipe-y', (cards.offsetTop + h * 0.5) + 'px');
+      stop = demo(swipe, () => cards.classList.add('nudge'), () => cards.classList.remove('nudge'), 5300);
+    };
+    new IntersectionObserver((es, io) => {
+      if (es.some(e => e.isIntersecting)) { io.disconnect(); setTimeout(play, 900); }
+    }, { threshold: 0.6 }).observe(cards);
+  }
+
+  // "Who" track: the first time it is pinned on screen, show the hand once.
+  const who = document.getElementById('who');
+  const wSwipe = document.getElementById('who-swipe');
+  const wCard = who && who.querySelector('.wcard');
+  if (who && wSwipe && wCard) {
+    const check = () => {
+      if (!mq.matches || !who.classList.contains('who--pinned')) return;
+      const r = who.getBoundingClientRect();
+      if (r.top > 0 || r.bottom < window.innerHeight) return;
+      window.removeEventListener('scroll', check);
+      const pin = wSwipe.parentElement.getBoundingClientRect();
+      // Just under the intro's "keep scrolling" line, so it never covers the heading.
+      const h = (who.querySelector('.who__hint') || wCard).getBoundingClientRect();
+      wSwipe.style.setProperty('--swipe-y', Math.min(h.bottom - pin.top + 64, pin.height - 70) + 'px');
+      demo(wSwipe, () => {}, () => {}, 5300);
+    };
+    window.addEventListener('scroll', check, { passive: true });
+  }
 })();
 </script>
 
