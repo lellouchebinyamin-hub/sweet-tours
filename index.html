@@ -2323,7 +2323,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   const wBar = document.getElementById('who-bar');
   const wide = window.matchMedia('(min-width: 861px)');
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let wDist = 0, wX = 0, wLast = 0, wSkew = 0, wRun = false, wK = -1;
+  let wDist = 0, wX = 0, wLast = 0, wSkew = 0, wRun = false, wK = -1, wDragX = 0;
   const wLayout = () => {
     const pin = !calm;
     who.classList.toggle('who--pinned', pin);
@@ -2339,7 +2339,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     if (who.classList.contains('who--pinned')) {
       const total = who.offsetHeight - window.innerHeight;
       const p = clamp01(-who.getBoundingClientRect().top / total);
-      wX = p * wDist * (rtl ? 1 : -1);
+      wX = p * wDist * (rtl ? 1 : -1) + wDragX;
       wTrack.style.setProperty('--x', wX.toFixed(1) + 'px');
       wBar.style.setProperty('--wp', p.toFixed(4));
       wSkew += ((wX - wLast) * 0.08 - wSkew) * 0.18;
@@ -2376,41 +2376,53 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   } else { wCards.forEach(c => c.classList.add('seen')); }
   window.stWhoLayout = wLayout;
 
-  /* A sideways swipe on the pinned track moves it too: the finger becomes page scroll, then it settles on a card. */
+  /* A sideways swipe on the pinned track moves it too. While the finger is down the track follows it visually
+     (iOS ignores page scrolling during a touch); on release the page jumps to the matching scroll position
+     and then glides to the nearest card, so vertical scrolling picks up exactly where the swipe left off. */
   const wSwipe = document.getElementById('who-swipe');
-  const wPerPx = () => (who.offsetHeight - window.innerHeight) / (wDist || 1);
   const wSign = () => (page.dir === 'rtl' ? 1 : -1);
-  let tx0 = 0, ty0 = 0, sy0 = 0, wDrag = null, tT = 0, tLastX = 0, tV = 0;
+  const wTotal = () => who.offsetHeight - window.innerHeight;
+  const wTop = () => who.getBoundingClientRect().top + window.scrollY;
+  let tx0 = 0, ty0 = 0, wDrag = null, tT = 0, tLastX = 0, tV = 0;
   wTrack.addEventListener('touchstart', e => {
     if (!who.classList.contains('who--pinned')) return;
     const t = e.touches[0];
-    tx0 = tLastX = t.clientX; ty0 = t.clientY; sy0 = window.scrollY; wDrag = null; tT = performance.now(); tV = 0;
+    tx0 = tLastX = t.clientX; ty0 = t.clientY; wDrag = null; tT = performance.now(); tV = 0;
     if (wSwipe) wSwipe.classList.remove('on');
   }, { passive: true });
   wTrack.addEventListener('touchmove', e => {
     if (!who.classList.contains('who--pinned')) return;
     const t = e.touches[0], dx = t.clientX - tx0, dy = t.clientY - ty0;
-    if (wDrag === null && Math.abs(dx) + Math.abs(dy) > 8) wDrag = Math.abs(dx) > Math.abs(dy);
+    if (wDrag === null && Math.abs(dx) + Math.abs(dy) > 8) wDrag = Math.abs(dx) > Math.abs(dy) * 1.1;
     if (!wDrag) return;
+    if (e.cancelable) e.preventDefault();
     const now = performance.now();
     tV = (t.clientX - tLastX) / Math.max(1, now - tT); tLastX = t.clientX; tT = now;
-    window.scrollTo(0, sy0 + dx * wSign() * wPerPx());
-  }, { passive: true });
-  wTrack.addEventListener('touchend', () => {
-    if (!wDrag) return;
+    // Follow the finger, with a soft edge past the first and last card.
+    const base = wX - wDragX, lo = wSign() > 0 ? 0 : -wDist, hi = wSign() > 0 ? wDist : 0;
+    let v = base + dx;
+    if (v < lo) v = lo - (lo - v) * 0.3;
+    if (v > hi) v = hi + (v - hi) * 0.3;
+    wDragX = v - base;
+    if (!wRun) requestAnimationFrame(wFrame);
+  }, { passive: false });
+  const wRelease = () => {
+    if (!wDrag) { wDrag = null; return; }
     wDrag = null;
-    const vw = window.innerWidth;
-    const items = [...wTrack.children];
+    const vw = window.innerWidth, sign = wSign(), items = [...wTrack.children];
     const ds = items.map(el => { const r = el.getBoundingClientRect(); return r.left + r.width / 2 - vw / 2; });
     let k = 0;
     ds.forEach((d, i) => { if (Math.abs(d) < Math.abs(ds[k])) k = i; });
-    // A quick flick that has not travelled far yet still goes to the neighbour in the finger's direction.
-    if (Math.abs(tV) > 0.35 && Math.abs(ds[k]) < vw * 0.2) {
-      const fwd = tV * wSign() > 0;
-      k = Math.max(0, Math.min(items.length - 1, k + (fwd ? 1 : -1)));
-    }
-    window.scrollTo({ top: window.scrollY - ds[k] * wSign() * wPerPx(), behavior: 'smooth' });
-  }, { passive: true });
+    // A quick flick goes on to the neighbour in the finger's direction.
+    if (Math.abs(tV) > 0.3 && Math.abs(ds[k]) < vw * 0.25) k = Math.max(0, Math.min(items.length - 1, k + (tV * sign > 0 ? 1 : -1)));
+    const total = wTotal(), top = wTop(), toY = x => top + clamp01(x * sign / (wDist || 1)) * total;
+    const here = toY(wX), target = toY(wX - ds[k]);
+    wDragX = 0;
+    window.scrollTo({ top: here, behavior: 'instant' });
+    requestAnimationFrame(() => window.scrollTo({ top: target, behavior: 'smooth' }));
+  };
+  wTrack.addEventListener('touchend', wRelease, { passive: true });
+  wTrack.addEventListener('touchcancel', wRelease, { passive: true });
   if (document.fonts) document.fonts.ready.then(wLayout);
   window.addEventListener('load', wLayout);
 
