@@ -95,6 +95,14 @@ img { display: block; max-width: 100%; }
 .fld__help { margin: -2px 0 0; font-size: 13px; color: var(--stone); line-height: 1.5; }
 .lang { display: inline-flex; align-items: center; gap: 6px; }
 .lang b { padding: 2px 7px; border-radius: 999px; background: var(--sand); font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--stone); }
+.auto { font-size: 11px; font-weight: 600; color: var(--stone); }
+.auto--busy { color: var(--gold); }
+.auto--done { color: var(--ok); }
+.auto--err { color: var(--danger); }
+.retr { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border: 1px solid var(--line-2); border-radius: 999px; background: transparent; font-size: 11px; font-weight: 700; color: var(--stone); transition: border-color .3s, color .3s; }
+.retr:hover { border-color: var(--gold); color: var(--ink); }
+.retr svg { width: 12px; height: 12px; }
+.lang { flex-wrap: wrap; }
 .miss { padding: 2px 8px; border-radius: 999px; background: rgba(192, 138, 78, .16); color: #8A5A24; font-size: 11px; font-weight: 700; }
 .in {
   width: 100%; min-height: 46px; padding: 11px 14px;
@@ -1029,7 +1037,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
     const v = e.target.textContent.replace(/\s+/g, ' ').trim().slice(0, 60);
     if (!v) { e.target.textContent = s.name.he; return; }
     e.target.textContent = v;
-    if (v !== s.name.he) { s.name.he = v; changed(); toast('השם עודכן. לחצו על שמירה ופרסום כדי שיופיע באתר.'); }
+    if (v !== s.name.he) { s.name.he = v; changed(); queueTranslate(s, 'name', 0); toast('השם עודכן (גם באנגלית). לחצו על שמירה ופרסום כדי שיופיע באתר.'); }
   });
   grid.addEventListener('paste', e => {
     if (!e.target.matches('[data-name]')) return;
@@ -1185,10 +1193,75 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
   $('pv-close').addEventListener('click', closePreview);
   $('pv-shade').addEventListener('click', closePreview);
 
+  /* ---------- Hebrew to English, automatically ---------- */
+  // Editing a Hebrew field rewrites its English twin a moment later, unless the English was typed by hand
+  // in this session; the small button next to each English label translates again on demand.
+  const TR_FIELDS = ['name', 'line', 'mood', 'story', 'promo'];
+  const manualEn = new Set(), trTimers = {};
+  const titleCase = t => t.replace(/^the\s+/i, '').replace(/\b([a-z])([a-z']*)/g, (m, a, b, i) => (i > 0 && /^(of|the|and|in|on|at|by|a|an|to|for)$/.test(a + b) ? m : a.toUpperCase() + b));
+  const tidy = (field, t) => {
+    t = t.replace(/\s+/g, ' ').trim();
+    if (field === 'name') return titleCase(t);
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  };
+  const enMark = (field, state) => {
+    const m = ed.querySelector('[data-auto="' + field + '"]');
+    if (!m) return;
+    m.textContent = state === 'busy' ? 'מתרגם…' : state === 'done' ? 'תורגם אוטומטית' : state === 'err' ? 'התרגום נכשל' : '';
+    m.className = 'auto' + (state ? ' auto--' + state : '');
+  };
+  const translateField = async (s, field, force = false) => {
+    if (!force && manualEn.has(s.id + ':' + field)) return;
+    const he = s[field].he;
+    if (!he.trim()) return;
+    const mine = editing === s.id;
+    if (mine) enMark(field, 'busy');
+    try {
+      // A lone word translates badly without context ("שקיעה" comes back as "sedimentation"), so moods get a label.
+      const ctx = field === 'mood' ? 'אווירה: ' : '';
+      const d = await api('/api/translate', { method: 'POST', body: JSON.stringify({ texts: [ctx + he] }) });
+      if (ctx) d.texts[0] = String(d.texts[0] || '').replace(/^[^:]*:\s*/, '');
+      if (s[field].he !== he || (!force && manualEn.has(s.id + ':' + field))) return; // the text moved on meanwhile
+      const max = field === 'story' ? 900 : field === 'line' ? 200 : field === 'mood' ? 40 : 60;
+      s[field].en = tidy(field, d.texts[0] || '').slice(0, max);
+      if (force) manualEn.delete(s.id + ':' + field);
+      if (editing === s.id) {
+        const f = ed.querySelector('[data-path="' + field + '.en"]');
+        if (f) f.value = s[field].en;
+        paintCounts(); paintReady(); paintPreview();
+        enMark(field, 'done');
+      }
+      changed();
+    } catch (x) { if (editing === s.id) enMark(field, 'err'); }
+  };
+  const queueTranslate = (s, field, ms = 800) => {
+    const k = s.id + ':' + field;
+    clearTimeout(trTimers[k]);
+    trTimers[k] = setTimeout(() => translateField(s, field), ms);
+  };
+  // Each English label gets a status note and a "translate again" button.
+  TR_FIELDS.forEach(field => {
+    const f = ed.querySelector('[data-path="' + field + '.en"]');
+    const head = f && f.closest('.fld').querySelector('.lang');
+    if (!head) return;
+    head.insertAdjacentHTML('beforeend', '<span class="auto" data-auto="' + field + '"></span><button type="button" class="retr" data-retr="' + field + '" title="תרגום מחדש מהעברית">' + ICON.swap + 'תרגום</button>');
+  });
+  ed.addEventListener('click', e => {
+    const b = e.target.closest('[data-retr]');
+    if (!b) return;
+    e.preventDefault();
+    translateField(cur(), b.dataset.retr, true);
+  });
+
   // Fields
   inputs.forEach(f => f.addEventListener('input', () => {
     const s = cur(), p = f.dataset.path;
     setPath(s, p, f.value);
+    const [field, lang] = p.split('.');
+    if (TR_FIELDS.includes(field)) {
+      if (lang === 'he') queueTranslate(s, field);
+      else { manualEn.add(s.id + ':' + field); enMark(field, ''); }
+    }
     if (p.startsWith('promo.') && f.value && !s.promo.on) { s.promo.on = true; $('promo-on').checked = true; }
     paintCounts(); paintReady(); paintPreview();
     if (p.startsWith('name.')) paintHead();
