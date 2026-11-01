@@ -1426,6 +1426,15 @@ h1 em { font-style: normal; color: var(--gold-soft); }
 .sheet[hidden] { display: none; }
 @media (min-width: 861px) { .sheet { display: none !important; } }
 @media (min-width: 861px) and (max-width: 1120px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Desktop: shorter photos, and the price as the hero of each card. */
+@media (min-width: 861px) {
+  .card__media { aspect-ratio: 4 / 3; }
+  .card__foot { align-items: end; padding-top: 20px; }
+  .card__price small { font-size: 13px; }
+  .card__price b { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 3vw, 46px); line-height: 1; color: var(--gold); letter-spacing: -.01em; }
+  .card__price .pr__face { gap: 6px; }
+  .card__price .pr__bar { bottom: -9px; }
+}
 
 /* ---------- Motion ---------- */
 @keyframes rise { from { transform: translateY(105%); } to { transform: none; } }
