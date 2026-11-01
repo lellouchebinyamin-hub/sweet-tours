@@ -47,6 +47,9 @@ const accounts = () => [['ADMIN_EMAIL', 'ADMIN_PASSWORD'], ['OWNER_EMAIL', 'OWNE
   .map(([e, p]) => [envText(e), envText(p)])
   .filter(([e, p]) => e.trim() && p);
 export const configured = () => accounts().length > 0;
+// Which logins exist (names only, never values), to help when one does not work.
+export const accountNames = () => [['admin', 'ADMIN'], ['owner', 'OWNER']]
+  .filter(([, k]) => envText(k + '_EMAIL') && envText(k + '_PASSWORD')).map(([n]) => n);
 
 // Changing the password in Vercel signs everyone out, because the key depends on it.
 const key = () => crypto.createHash('sha256')
