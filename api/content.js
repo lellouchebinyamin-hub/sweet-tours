@@ -8,9 +8,12 @@ export default async function handler(req, res) {
     const admin = Boolean(req.query && req.query.admin !== undefined);
     let cur = null;
     try { cur = await readContent(admin); } catch (e) { console.error('content read', e); }
+    // A saved file without any suites (damaged or emptied) falls back to the built-in six, so nothing disappears.
+    const ok = cur && Array.isArray(cur.suites) && cur.suites.length > 0;
+    if (cur && !ok) console.error('content without suites', Object.keys(cur));
     return send(res, 200, {
-      suites: cur ? cur.suites : DEFAULT_CONTENT.suites,
-      updatedAt: cur ? cur.updatedAt : null
+      suites: ok ? cur.suites : DEFAULT_CONTENT.suites,
+      updatedAt: ok ? cur.updatedAt : null
     }, { 'Cache-Control': admin ? 'no-store' : 'public, max-age=0, s-maxage=30, stale-while-revalidate=600' });
   }
 
