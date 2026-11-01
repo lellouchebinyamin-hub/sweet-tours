@@ -20,6 +20,7 @@ export const DEFAULT_CONTENT = {
         "en": "Terracotta and sand, made for the hour when the sun touches the water. Fill the jacuzzi, switch off the phone, and let the sea play."
       },
       "price": 1200,
+      "priceMid": 900,
       "images": [
         "img/suite-1a.jpg",
         "img/suite-1b.jpg"
@@ -49,6 +50,7 @@ export const DEFAULT_CONTENT = {
         "en": "Soft rose, linen and gentle light. For couples who came to stop time, with a jacuzzi facing the sunset and a quiet that stays after dark."
       },
       "price": 1200,
+      "priceMid": 900,
       "images": [
         "img/suite-2a.jpg",
         "img/suite-2b.jpg"
@@ -78,6 +80,7 @@ export const DEFAULT_CONTENT = {
         "en": "White, bright and full of blue. A suite that feels like a long morning, with the sea in every window and room for the whole family."
       },
       "price": 1200,
+      "priceMid": 900,
       "images": [
         "img/suite-3a.jpg",
         "img/suite-3b.jpg"
@@ -107,6 +110,7 @@ export const DEFAULT_CONTENT = {
         "en": "Light wood and sage. Wake to soft light, coffee facing the water, and no reason to hurry."
       },
       "price": 1200,
+      "priceMid": 900,
       "images": [
         "img/suite-4a.jpg",
         "img/suite-4b.jpg"
@@ -136,6 +140,7 @@ export const DEFAULT_CONTENT = {
         "en": "Deep blue and warm lamps. When the sky goes dark the suite lights up, and the jacuzzi becomes the best seat in Netanya."
       },
       "price": 1200,
+      "priceMid": 900,
       "images": [
         "img/suite-5a.jpg",
         "img/suite-5b.jpg"
@@ -165,6 +170,7 @@ export const DEFAULT_CONTENT = {
         "en": "Dark walnut and honey. A rich, warm suite for a sunset that starts in the jacuzzi and ends long after."
       },
       "price": 1200,
+      "priceMid": 900,
       "images": [
         "img/suite-6a.jpg",
         "img/suite-6b.jpg"

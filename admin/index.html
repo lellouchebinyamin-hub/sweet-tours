@@ -341,6 +341,9 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
 .price b { display: grid; place-items: center; padding: 0 16px; background: var(--sand); font-family: var(--display); font-weight: 400; font-size: 24px; color: var(--stone); }
 .price input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 12px 16px; background: transparent; font-size: 28px; font-family: var(--display); }
 .price small { display: grid; place-items: center; padding-inline-end: 16px; color: var(--stone); font-size: 14px; }
+.prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; }
+@media (max-width: 860px) { .prices { grid-template-columns: minmax(0, 1fr); } }
+.prices .fld { display: grid; gap: 10px; }
 .steps { display: flex; gap: 8px; flex-wrap: wrap; }
 .steps button { border: 1px solid var(--line-2); background: transparent; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; transition: border-color .3s, background .3s; }
 .steps button:hover { border-color: var(--gold); background: rgba(192, 138, 78, .08); }
@@ -643,7 +646,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
           <li><a href="#s-photos" data-sec="s-photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>תמונות<em hidden></em></a></li>
           <li><a href="#s-basics" data-sec="s-basics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg>שם ותיאור קצר<em hidden></em></a></li>
           <li><a href="#s-story" data-sec="s-story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 11h16M4 16h10"/></svg>הסיפור<em hidden></em></a></li>
-          <li><a href="#s-price" data-sec="s-price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2M15 16v-5.5a2 2 0 0 0-2-2"/></svg>מחיר</a></li>
+          <li><a href="#s-price" data-sec="s-price"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2M15 16v-5.5a2 2 0 0 0-2-2"/></svg>מחירים</a></li>
           <li><a href="#s-promo" data-sec="s-promo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>מבצע</a></li>
           <li><a href="#s-settings" data-sec="s-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>הגדרות</a></li>
         </ol>
@@ -691,10 +694,18 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
         </section>
 
         <section class="sec" id="s-price">
-          <div class="sec__head"><div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2M15 16v-5.5a2 2 0 0 0-2-2"/></svg></i>מחיר ללילה</h2>
-            <p>מוצג באתר כ"החל מ-". זה מחיר פתיחה; את המחיר הסופי סוגרים בטלפון.</p></div></div>
-          <label class="price"><b>₪</b><input type="number" inputmode="numeric" min="0" max="100000" step="10" id="ed-price" class="ltr" aria-label="מחיר ללילה"><small>ללילה</small></label>
-          <div class="steps" id="price-steps"><button type="button" data-d="-100">‎−100</button><button type="button" data-d="-50">‎−50</button><button type="button" data-d="50">‎+50</button><button type="button" data-d="100">‎+100</button></div>
+          <div class="sec__head"><div><h2><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"/><path d="M9 8v5.5a2 2 0 0 0 2 2M15 16v-5.5a2 2 0 0 0-2-2"/></svg></i>מחירים ללילה</h2>
+            <p>באתר שני המחירים מתחלפים כל 5 שניות. אם משאירים את מחיר אמצע השבוע על 0, מוצג רק מחיר סוף השבוע.</p></div></div>
+          <div class="prices">
+            <div class="fld"><span class="fld__head">לילה בסוף שבוע</span>
+              <label class="price"><b>₪</b><input type="number" inputmode="numeric" min="0" max="100000" step="10" id="ed-price" class="ltr" aria-label="מחיר ללילה בסוף שבוע"><small>ללילה</small></label>
+              <div class="steps" data-steps="price"><button type="button" data-d="-100">‎−100</button><button type="button" data-d="-50">‎−50</button><button type="button" data-d="50">‎+50</button><button type="button" data-d="100">‎+100</button></div>
+            </div>
+            <div class="fld"><span class="fld__head">לילה באמצע שבוע</span>
+              <label class="price"><b>₪</b><input type="number" inputmode="numeric" min="0" max="100000" step="10" id="ed-price-mid" class="ltr" aria-label="מחיר ללילה באמצע שבוע"><small>ללילה</small></label>
+              <div class="steps" data-steps="priceMid"><button type="button" data-d="-100">‎−100</button><button type="button" data-d="-50">‎−50</button><button type="button" data-d="50">‎+50</button><button type="button" data-d="100">‎+100</button></div>
+            </div>
+          </div>
         </section>
 
         <section class="sec" id="s-promo">
@@ -784,8 +795,8 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
     warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>'
   };
   const PV = {
-    he: { from: 'החל מ-', night: 'ללילה', more: 'לפרטים', suite: 'סוויטה', ask: 'לבירור זמינות בסוויטת {name}', call: 'התקשרו עכשיו', blank: 'סוויטה חדשה' },
-    en: { from: 'From', night: 'per night', more: 'Details', suite: 'Suite', ask: 'Check availability for {name}', call: 'Call now', blank: 'New suite' }
+    he: { we: 'סופ״ש', mid: 'אמצ״ש', from: 'החל מ-', night: 'ללילה', more: 'לפרטים', suite: 'סוויטה', ask: 'לבירור זמינות בסוויטת {name}', call: 'התקשרו עכשיו', blank: 'סוויטה חדשה' },
+    en: { we: 'Weekend', mid: 'Midweek', from: 'From', night: 'per night', more: 'Details', suite: 'Suite', ask: 'Check availability for {name}', call: 'Call now', blank: 'New suite' }
   };
 
   /* ---------- State ---------- */
@@ -807,6 +818,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
     ['name', 'line', 'mood', 'story'].forEach(k => { s[k] = Object.assign({ he: '', en: '' }, s[k] || {}); });
     s.images = s.images || [];
     if (!(s.price >= 0)) s.price = 1200;
+    if (!(s.priceMid >= 0)) s.priceMid = 0;
     return s;
   };
   const promoLive = s => s.promo.on && Boolean(s.promo.he || s.promo.en) && (!s.promo.until || s.promo.until >= today());
@@ -997,7 +1009,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
           '<div class="tile__top"><span class="tile__num">' + pad(k + 1) + '</span><h3 class="tile__name" contenteditable="true" spellcheck="false" data-name aria-label="שם הסוויטה, אפשר לערוך">' + esc(s.name.he) + '</h3>' + ICON.pen.replace('<svg', '<svg class="tile__pen"') + '</div>' +
           '<p class="tile__line">' + esc(s.line.he) + '</p>' +
           '<div class="tile__foot">' +
-            '<span class="tile__price"><small>החל מ- </small><b>' + fmtPrice(s.price) + '</b></span>' +
+            '<span class="tile__price"><small>סופ״ש </small><b>' + fmtPrice(s.price) + '</b>' + (s.priceMid > 0 ? '<small> · אמצ״ש </small><b>' + fmtPrice(s.priceMid) + '</b>' : '') + '</span>' +
             '<span class="tile__tools">' + ring(readiness(s)) +
               '<button class="icon-btn" type="button" data-move="-1" aria-label="להזיז קדימה" title="להזיז קדימה"' + (k === 0 ? ' disabled' : '') + '>' + ICON.right + '</button>' +
               '<button class="icon-btn" type="button" data-move="1" aria-label="להזיז אחורה" title="להזיז אחורה"' + (k === suites.length - 1 ? ' disabled' : '') + '>' + ICON.left + '</button>' +
@@ -1070,7 +1082,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
   document.querySelector('.head [data-add]').addEventListener('click', () => addSuite());
 
   const addSuite = () => {
-    const s = norm({ id: 's' + Date.now().toString(36), name: { he: 'סוויטה חדשה', en: 'New suite' }, price: 1200, hidden: true });
+    const s = norm({ id: 's' + Date.now().toString(36), name: { he: 'סוויטה חדשה', en: 'New suite' }, price: 1200, priceMid: 900, hidden: true });
     suites.push(s);
     changed();
     go(s.id);
@@ -1097,6 +1109,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
     const s = cur();
     inputs.forEach(f => { f.value = getPath(s, f.dataset.path) || ''; });
     $('ed-price').value = s.price;
+    $('ed-price-mid').value = s.priceMid || 0;
     $('promo-on').checked = s.promo.on;
     $('promo-until').value = s.promo.until || '';
     $('vis-on').checked = !s.hidden;
@@ -1163,7 +1176,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
         '</div>' +
         '<div class="pc__body"><div class="pc__top"><span class="pc__num">' + pad(n) + '</span><h3 class="pc__name">' + esc(name) + '</h3></div>' +
         '<p class="pc__line">' + esc(tx(s.line)) + '</p>' +
-        '<div class="pc__foot"><span>' + L.from + ' <b>' + fmtPrice(s.price) + '</b></span><span class="pc__more">' + L.more + '<svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span></div></div>' +
+        '<div class="pc__foot"><span>' + L.we + ' <b>' + fmtPrice(s.price) + '</b>' + (s.priceMid > 0 ? ' · ' + L.mid + ' <b>' + fmtPrice(s.priceMid) + '</b>' : '') + '</span><span class="pc__more">' + L.more + '<svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span></div></div>' +
       '</article>';
     } else {
       stage.innerHTML = '<div class="phone"><div class="phone__screen"><div class="phone__notch"></div>' +
@@ -1172,7 +1185,7 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
         '<div class="pp__body"><p class="pp__label">' + L.suite + ' ' + pad(n) + '</p><p class="pp__story">' + esc(tx(s.story)) + '</p>' +
           (imgs[1] || imgs[0] ? '<img class="pp__img" src="' + esc(imgs[1] || imgs[0]) + '" alt="">' : '') +
           (promo ? '<span class="pp__promo">' + esc(promo) + '</span>' : '') +
-          '<div class="pp__price"><small>' + L.from + '</small><b>' + fmtPrice(s.price) + '</b><small>' + L.night + '</small></div>' +
+          '<div class="pp__price"><small>' + L.we + '</small><b>' + fmtPrice(s.price) + '</b>' + (s.priceMid > 0 ? '<small>' + L.mid + '</small><b>' + fmtPrice(s.priceMid) + '</b>' : '') + '</div>' +
           '<div class="pp__cta"><span>' + esc(L.ask.replace('{name}', name)) + '</span><i></i></div>' +
           '<div class="pp__cta pp__cta--ghost"><span>' + L.call + ' 058-408-8554</span><i></i></div>' +
         '</div></div></div>';
@@ -1268,14 +1281,15 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
     if (p.startsWith('promo.')) paintPromo();
     changed();
   }));
-  const setPrice = v => { cur().price = Math.max(0, Math.min(100000, Math.round(+v || 0))); paintReady(); paintPreview(); changed(); };
-  $('ed-price').addEventListener('input', e => setPrice(e.target.value));
-  $('price-steps').addEventListener('click', e => {
-    const b = e.target.closest('[data-d]');
+  const setPrice = (k, v) => { cur()[k] = Math.max(0, Math.min(100000, Math.round(+v || 0))); paintReady(); paintPreview(); changed(); };
+  $('ed-price').addEventListener('input', e => setPrice('price', e.target.value));
+  $('ed-price-mid').addEventListener('input', e => setPrice('priceMid', e.target.value));
+  ed.querySelectorAll('[data-steps]').forEach(box => box.addEventListener('click', e => {
+    const b = e.target.closest('[data-d]'), k = box.dataset.steps;
     if (!b) return;
-    setPrice(cur().price + (+b.dataset.d));
-    $('ed-price').value = cur().price;
-  });
+    setPrice(k, (cur()[k] || 0) + (+b.dataset.d));
+    $(k === 'price' ? 'ed-price' : 'ed-price-mid').value = cur()[k];
+  }));
   $('promo-on').addEventListener('change', e => {
     const s = cur();
     s.promo.on = e.target.checked;

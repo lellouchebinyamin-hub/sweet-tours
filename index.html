@@ -1263,6 +1263,32 @@ h1 em { font-style: normal; color: var(--gold-soft); }
 [dir="ltr"] .price__label { text-transform: uppercase; }
 
 
+
+/* ---------- Two prices taking turns: weekend, then midweek ---------- */
+.pr { position: relative; display: inline-grid; vertical-align: bottom; }
+.pr__face { grid-area: 1 / 1; transition: opacity .8s var(--ease-out), transform 1s var(--ease-out), filter .8s var(--ease-out), clip-path 1s var(--ease-out); }
+.pr--2 .pr__face { opacity: 0; transform: translateY(55%); filter: blur(6px); clip-path: inset(0 0 100% 0); pointer-events: none; }
+#page[data-pr="mid"] .pr--2 .pr__face[data-k="we"] { transform: translateY(-55%); clip-path: inset(100% 0 0 0); }
+#page:not([data-pr="mid"]) .pr--2 .pr__face[data-k="we"],
+#page[data-pr="mid"] .pr--2 .pr__face[data-k="mid"] { opacity: 1; transform: none; filter: none; clip-path: inset(-20% -10% -20% -10%); pointer-events: auto; transition-delay: .32s; }
+/* The outgoing price leaves quickly; the incoming one waits for it, so the two never overlap. */
+.pr--2 .pr__face { transition-duration: .45s, .55s, .45s, .55s; }
+#page:not([data-pr="mid"]) .pr--2 .pr__face[data-k="we"], #page[data-pr="mid"] .pr--2 .pr__face[data-k="mid"] { transition-duration: .8s, 1s, .8s, 1s; }
+.pr__bar { position: absolute; inset-inline: 0; bottom: -7px; height: 1px; background: currentColor; opacity: .18; }
+.pr__bar::after { content: ""; position: absolute; inset: 0; background: var(--gold); transform-origin: right; animation: pr-a 5s linear both; }
+#page[dir="ltr"] .pr__bar::after { transform-origin: left; }
+#page[data-pr="mid"] .pr__bar::after { animation-name: pr-b; }
+@keyframes pr-a { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes pr-b { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.card__price .pr__face { display: grid; gap: 3px; }
+.card__price small { font-size: 11px; letter-spacing: .04em; color: var(--stone); }
+.card__price .pr__bar { opacity: 1; background: var(--line); }
+.sd__price .pr__face { display: grid; gap: 8px; justify-items: start; }
+.sd__price .pr__bar { bottom: -12px; }
+.hero .price .pr { justify-items: end; }
+.hero .price .pr__face { display: block; }
+.hero .price .pr__bar { bottom: -10px; }
+
 /* ---------- Gesture hints without words: scroll down, swipe sideways ---------- */
 @keyframes cue-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 @keyframes cue-bob { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(4px); } }
@@ -1457,7 +1483,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       </div>
 
       <aside class="facts">
-        <p class="price" style="margin:0">
+        <p class="price" id="hero-price" style="margin:0">
           <span class="price__label" data-t="from">החל מ-</span>
           <span class="price__value">₪1,200 <small data-t="night">ללילה</small></span>
         </p>
@@ -1772,7 +1798,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
         <figure class="sd__fig"><img id="detail-b" alt=""><span class="sd__figcap" id="sd-cap">x</span></figure>
       </section>
       <section class="sd__book wrap">
-        <p class="sd__price" style="margin:0"><small data-t="from">x</small><b id="sd-price">₪1,200</b><small data-t="night">x</small></p>
+        <div class="sd__price" id="sd-price"><b>₪1,200</b></div>
         <div class="sd__acts">
           <p class="sd__promo" id="sd-promo" hidden></p>
           <a class="btn btn--acc sd__cta" id="detail-wa" href="#" target="_blank" rel="noopener"><span id="detail-ask">x</span><i class="sd__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.3 2 2.5 4.3 4.6 4.6l1.2-1.2 1.7.9"/></svg></i></a>
@@ -1817,7 +1843,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       h1a: 'שקיעה, ג׳קוזי,', h1b: 'והים כולו <em>שלכם.</em>',
       lede: 'סוויטות בוטיק לסוף שבוע בנתניה. בכל סוויטה נוף לים, ג׳קוזי פרטי וחניה, לזוגות ולמשפחות של עד 4 אורחים.',
       call: 'התקשרו עכשיו', wa: 'כתבו לנו בוואטסאפ',
-      from: 'החל מ-', night: 'ללילה', sunset: 'השקיעה הערב',
+      from: 'החל מ-', night: 'ללילה', prWe: 'לילה בסוף שבוע', prMid: 'לילה באמצע שבוע', prWeShort: 'סוף שבוע', prMidShort: 'אמצע שבוע', sunset: 'השקיעה הערב',
       addr: 'גד מכנס 6, נתניה', menuOpen: 'פתיחת תפריט', menuClose: 'סגירת תפריט',
       after: '<strong>שלב 6: הפוטר. כל הסקשנים בנויים.</strong> השלב הבא הוא מעבר נפרד על הנייד. תמונות הים הן זמניות עד שיגיעו התמונות האמיתיות של הסוויטות.',
       introLabel: 'על המקום',
@@ -1900,7 +1926,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
       h1a: 'Sunset, a jacuzzi,', h1b: 'and the sea is <em>yours.</em>',
       lede: 'Boutique suites for a weekend in Netanya. Every suite has a sea view, a private jacuzzi and parking, for couples and families of up to 4 guests.',
       call: 'Call now', wa: 'Message us on WhatsApp',
-      from: 'From', night: 'per night', sunset: 'Sunset tonight',
+      from: 'From', night: 'per night', prWe: 'Weekend night', prMid: 'Midweek night', prWeShort: 'Weekend', prMidShort: 'Midweek', sunset: 'Sunset tonight',
       addr: 'Gad Machnes 6, Netanya', menuOpen: 'Open menu', menuClose: 'Close menu',
       after: '<strong>Step 6: the footer. All sections are built.</strong> Next is a separate mobile pass. The sea images are temporary until the real suite photos arrive.',
       introLabel: 'The place',
@@ -2032,12 +2058,20 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     mood: pick(copy.he['s' + i + 'mood'], copy.en['s' + i + 'mood']),
     story: pick(copy.he['s' + i + 'story'], copy.en['s' + i + 'story']),
     price: 1200,
+    priceMid: 900,
     images: ['img/suite-' + i + 'a.jpg', 'img/suite-' + i + 'b.jpg'],
     promo: { on: false, he: '', en: '' }
   }));
   const tx = o => (o && (o[lang] || o.he || o.en)) || '';
   const pad = n => String(n).padStart(2, '0');
   const fmtPrice = p => '₪' + Math.round(+p || 0).toLocaleString('en-US');
+  // Weekend and midweek prices take turns every few seconds (see the ticker below); one price alone stays still.
+  const priceRot = (we, mid, face) => {
+    const faces = [['we', we]].concat(mid > 0 ? [['mid', mid]] : []);
+    return '<span class="pr' + (faces.length > 1 ? ' pr--2' : '') + '">' +
+      faces.map(([k, v]) => '<span class="pr__face" data-k="' + k + '">' + face(k, fmtPrice(v)) + '</span>').join('') +
+      (faces.length > 1 ? '<i class="pr__bar" aria-hidden="true"></i>' : '') + '</span>';
+  };
   const imgsOf = s => (s.images && s.images.length ? s.images : ['img/moment-1.jpg']);
   const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
   const promoOf = s => (s.promo && s.promo.on && (!s.promo.until || s.promo.until >= today()) ? tx(s.promo) : '');
@@ -2084,13 +2118,18 @@ h1 em { font-style: normal; color: var(--gold-soft); }
         '<p class="card__line">' + esc(tx(s.line)) + '</p>' +
         '<span></span>' +
         '<div class="card__foot">' +
-          '<span class="card__price"><span>' + c.from + '</span> <b>' + fmtPrice(s.price) + '</b></span>' +
+          '<span class="card__price">' + priceRot(s.price, s.priceMid, (k, v) => '<small>' + (k === 'we' ? c.prWe : c.prMid) + '</small><b>' + v + '</b>') + '</span>' +
           '<span class="card__more"><span>' + c.more + '</span><svg viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 5H1M5 1L1 5l4 4"/></svg></span>' +
         '</div>' +
       '</div></li>';
   };
   const renderSuites = () => {
     const c = copy[lang];
+    // Hero: the lowest weekend and midweek prices among the suites on show.
+    const minOf = k => Math.min(...suites.map(s => +s[k] || 0).filter(v => v > 0));
+    const weMin = minOf('price'), midMin = minOf('priceMid');
+    if (isFinite(weMin)) document.getElementById('hero-price').innerHTML = priceRot(weMin, isFinite(midMin) ? midMin : 0, (k, v) =>
+      '<span class="price__label">' + c.from + ' · ' + (k === 'we' ? c.prWeShort : c.prMidShort) + '</span><span class="price__value">' + v + ' <small>' + c.night + '</small></span>');
     cardsEl.innerHTML = suites.map((s, k) => cardHtml(s, k, c)).join('');
     [...cardsEl.children].forEach((li, k) => { li.style.setProperty('--d', (0.15 + k * 0.09).toFixed(2) + 's'); wireCard(li); });
     stripEl.innerHTML = suites.map((s, k) => '<button type="button" data-open="' + k + '"><img src="' + esc(imgsOf(s)[0]) + '" alt="" loading="lazy" width="800" height="1000"><span>' + esc(tx(s.name)) + '</span></button>').join('');
@@ -2130,7 +2169,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     document.getElementById('detail-line').textContent = tx(s.line);
     document.getElementById('sd-story').textContent = tx(s.story);
     document.getElementById('sd-cap').textContent = c.moodCap;
-    document.getElementById('sd-price').textContent = fmtPrice(s.price);
+    document.getElementById('sd-price').innerHTML = priceRot(s.price, s.priceMid, (k, v) => '<small>' + (k === 'we' ? c.prWe : c.prMid) + '</small><b>' + v + '</b>');
     promoEl.textContent = promo; promoEl.hidden = !promo;
     document.getElementById('detail-ask').textContent = c.bAsk.replace('{name}', name);
     document.getElementById('detail-wa').href = 'https://wa.me/972584088554?text=' + encodeURIComponent(c.waSuite.replace('{name}', name));
@@ -2752,6 +2791,18 @@ void main(){
     if (!document.hidden && !still) raf = requestAnimationFrame(frame);
   });
   raf = requestAnimationFrame(frame);
+})();
+</script>
+
+<script>
+/* Weekend and midweek prices swap everywhere at once, every five seconds. */
+(() => {
+  const page = document.getElementById('page');
+  page.dataset.pr = 'we';
+  setInterval(() => {
+    if (document.hidden) return;
+    page.dataset.pr = page.dataset.pr === 'we' ? 'mid' : 'we';
+  }, 5000);
 })();
 </script>
 <script>
