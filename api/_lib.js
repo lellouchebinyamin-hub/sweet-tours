@@ -40,9 +40,11 @@ export const readJson = async (req, limit = 512 * 1024) => {
 export const fromAdminPage = req => req.headers['x-st-admin'] === '1';
 
 /* ---------- Sessions: a signed cookie, no database ---------- */
+// Values pasted into Vercel often carry a stray space, line break or quotes; ignore those.
+const envText = name => String(process.env[name] || '').trim().replace(/^(["'])(.*)\1$/, '$2').trim();
 // Two optional accounts: ADMIN_* (whoever set up the site) and OWNER_* (the site owner). Either is enough.
 const accounts = () => [['ADMIN_EMAIL', 'ADMIN_PASSWORD'], ['OWNER_EMAIL', 'OWNER_PASSWORD']]
-  .map(([e, p]) => [process.env[e] || '', process.env[p] || ''])
+  .map(([e, p]) => [envText(e), envText(p)])
   .filter(([e, p]) => e.trim() && p);
 export const configured = () => accounts().length > 0;
 
