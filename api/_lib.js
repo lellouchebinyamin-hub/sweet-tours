@@ -40,11 +40,15 @@ export const readJson = async (req, limit = 512 * 1024) => {
 export const fromAdminPage = req => req.headers['x-st-admin'] === '1';
 
 /* ---------- Sessions: a signed cookie, no database ---------- */
-export const configured = () => Boolean(process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD);
+// Two optional accounts: ADMIN_* (whoever set up the site) and OWNER_* (the site owner). Either is enough.
+const accounts = () => [['ADMIN_EMAIL', 'ADMIN_PASSWORD'], ['OWNER_EMAIL', 'OWNER_PASSWORD']]
+  .map(([e, p]) => [process.env[e] || '', process.env[p] || ''])
+  .filter(([e, p]) => e.trim() && p);
+export const configured = () => accounts().length > 0;
 
 // Changing the password in Vercel signs everyone out, because the key depends on it.
 const key = () => crypto.createHash('sha256')
-  .update(['st-admin', process.env.SESSION_SECRET || '', process.env.ADMIN_EMAIL || '', process.env.ADMIN_PASSWORD || ''].join('|'))
+  .update(['st-admin', process.env.SESSION_SECRET || '', ...accounts().flat()].join('|'))
   .digest();
 const sign = v => crypto.createHmac('sha256', key()).update(v).digest('base64url');
 const sameText = (a, b) => crypto.timingSafeEqual(
@@ -54,10 +58,13 @@ const sameText = (a, b) => crypto.timingSafeEqual(
 
 export const checkLogin = (email, password) => {
   if (!configured()) return false;
-  // Compare both, always, so the answer takes the same time whichever one is wrong.
-  const emailOk = sameText(String(email || '').trim().toLowerCase(), process.env.ADMIN_EMAIL.trim().toLowerCase());
-  const passOk = sameText(String(password || ''), process.env.ADMIN_PASSWORD);
-  return emailOk && passOk;
+  // Compare every field of every account, always, so the answer takes the same time whichever one is wrong.
+  const e = String(email || '').trim().toLowerCase(), p = String(password || '');
+  return accounts().reduce((ok, [ae, ap]) => {
+    const emailOk = sameText(e, ae.trim().toLowerCase());
+    const passOk = sameText(p, ap);
+    return (emailOk && passOk) || ok;
+  }, false);
 };
 
 const secureFlag = req => (req.headers['x-forwarded-proto'] === 'http' || LOCAL_DIR ? '' : '; Secure');
