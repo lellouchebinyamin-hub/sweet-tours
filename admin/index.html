@@ -892,6 +892,8 @@ textarea.in { min-height: 150px; resize: vertical; line-height: 1.65; }
     } catch (x) {
       err.textContent = x.status === 429 ? 'יותר מדי ניסיונות. נסו שוב בעוד כמה דקות.'
         : x.status === 503 ? 'פרטי הכניסה עוד לא הוגדרו בשרת.'
+        : x.status === 401 && x.data && x.data.wrong === 'password' ? 'האימייל נכון, אבל הסיסמה לא תואמת למה שמוגדר ב-Vercel.'
+        : x.status === 401 && x.data && x.data.wrong === 'email' ? 'האימייל הזה לא מוגדר ב-Vercel (ADMIN_EMAIL או OWNER_EMAIL).'
         : x.status === 401 ? 'האימייל או הסיסמה לא נכונים.'
         : 'משהו השתבש (' + (x.status || 'אין חיבור') + '). נסו שוב.';
       f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake');

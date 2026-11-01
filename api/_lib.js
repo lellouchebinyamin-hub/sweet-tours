@@ -61,15 +61,17 @@ const sameText = (a, b) => crypto.timingSafeEqual(
   crypto.createHash('sha256').update(String(b)).digest()
 );
 
+// Returns 'ok', 'password' (the email is known, the password is not) or 'email'.
 export const checkLogin = (email, password) => {
-  if (!configured()) return false;
+  if (!configured()) return 'email';
   // Compare every field of every account, always, so the answer takes the same time whichever one is wrong.
   const e = String(email || '').trim().toLowerCase(), p = String(password || '');
-  return accounts().reduce((ok, [ae, ap]) => {
+  return accounts().reduce((best, [ae, ap]) => {
     const emailOk = sameText(e, ae.trim().toLowerCase());
     const passOk = sameText(p, ap);
-    return (emailOk && passOk) || ok;
-  }, false);
+    const r = emailOk && passOk ? 'ok' : emailOk ? 'password' : 'email';
+    return best === 'ok' || (best === 'password' && r === 'email') ? best : r;
+  }, 'email');
 };
 
 const secureFlag = req => (req.headers['x-forwarded-proto'] === 'http' || LOCAL_DIR ? '' : '; Secure');

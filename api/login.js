@@ -17,12 +17,13 @@ export default async function handler(req, res) {
   let body;
   try { body = await readJson(req, 8 * 1024); } catch (e) { return send(res, e.status || 400, { error: e.message }); }
 
-  if (!checkLogin(body.email, body.password)) {
+  const result = checkLogin(body.email, body.password);
+  if (result !== 'ok') {
     const cur = t && now - t.start < WINDOW ? t : { start: now, n: 0 };
     cur.n += 1;
     tries.set(ip, cur);
     await new Promise(r => setTimeout(r, 500));
-    return send(res, 401, { error: 'wrong' });
+    return send(res, 401, { error: 'wrong', wrong: result });
   }
   tries.delete(ip);
   return send(res, 200, { ok: true }, { 'Set-Cookie': sessionCookie(req) });
