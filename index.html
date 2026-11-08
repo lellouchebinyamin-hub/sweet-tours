@@ -797,7 +797,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
 .who__count { font-family: var(--display); font-weight: 300; font-size: 18px; color: var(--on-image-quiet); direction: ltr; font-variant-numeric: tabular-nums; }
 .who__count b { font-weight: 300; color: var(--on-image); font-size: 30px; display: inline-block; height: 1em; line-height: 1; overflow: hidden; vertical-align: bottom; }
 .who__count b i { display: block; font-style: normal; transform: translateY(calc(var(--wk, 0) * -1em)); transition: transform .8s var(--ease-out); }
-.who__track { position: relative; z-index: 1; display: flex; align-items: center; gap: clamp(16px, 2vw, 32px); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 6px; }
+.who__track { position: relative; z-index: 1; display: flex; align-items: center; gap: clamp(16px, 2vw, 32px); overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; touch-action: pan-x pan-y; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 6px; }
 .who__track::-webkit-scrollbar { display: none; }
 .who--pinned .who__track { overflow: visible; scroll-snap-type: none; transform: translate3d(var(--x, 0px), 0, 0); will-change: transform; }
 .who__intro { flex: 0 0 auto; width: min(36vw, 520px); display: grid; gap: 22px; scroll-snap-align: start; }
@@ -1233,7 +1233,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
 .sheet__suites { display: grid; gap: 12px; opacity: 0; transform: translateY(20px); transition: opacity .8s var(--ease-out) .55s, transform .9s var(--ease-out) .55s; }
 .sheet.is-open .sheet__suites { opacity: 1; transform: none; }
 .sheet__suites p { margin: 0; font-size: 12px; letter-spacing: .14em; color: var(--on-image-quiet); }
-.sheet__strip { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * max(var(--gutter), env(safe-area-inset-left, 0px))); padding-inline: 0; }
+.sheet__strip { display: flex; gap: 10px; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; touch-action: pan-x pan-y; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * max(var(--gutter), env(safe-area-inset-left, 0px))); padding-inline: 0; }
 .sheet__strip { scroll-padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)); }
 .sheet__strip::before, .sheet__strip::after { content: ""; flex: 0 0 calc(max(var(--gutter), env(safe-area-inset-left, 0px)) - 10px); }
 .sheet__strip::-webkit-scrollbar { display: none; }
@@ -1339,7 +1339,7 @@ h1 em { font-style: normal; color: var(--gold-soft); }
   .swipe.on i { animation: swipe-trail 1.6s .2s ease-in-out 3 both; }
   .swipe.on svg { animation: swipe-hand 1.6s .2s ease-in-out 3 both; }
   .cards.nudge > li { animation: card-nudge 1.6s .2s ease-in-out 3; }
-  .who__track { touch-action: pan-y; }
+  .who--pinned .who__track { touch-action: pan-y; }
   .who__pin > .swipe { z-index: 4; }
   .who__pin > .swipe::before { background: rgba(226, 185, 138, .14); border: 1px solid rgba(226, 185, 138, .45); box-shadow: none; }
   .who__pin > .swipe svg { color: var(--gold-soft); }
@@ -1392,6 +1392,9 @@ h1 em { font-style: normal; color: var(--gold-soft); }
     display: flex;
     gap: 14px;
     overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     margin-inline: calc(-1 * max(var(--gutter), env(safe-area-inset-left, 0px)));
